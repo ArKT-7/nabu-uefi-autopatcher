@@ -1,0 +1,116 @@
+#!/bin/sh
+#
+# Copyright (C) 2025-26 https://github.com/ArKT-7/nabu-uefi-autopatcher
+#
+# Made for easy UEFI boot patching with the EDK2 boot menu using a single command—no recovery or ZIP flashing required. Primarily used for booting Linux on the Xiaomi Pad 5 (Nabu).
+#
+
+# Define URLs and target paths
+URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/edk2/busybox"
+URL_MAGISK_BOOT="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/edk2/magiskboot"
+URL_SHELLCODE="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/edk2/BootShim.Dualboot.bin"
+URL_KP="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/edk2/kernelpatcher"
+URL_UEFI="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/edk2/uefi.fd"
+
+TARGET_DIR="/dev/tmp/arkt"
+TARGET_BUSYBOX="$TARGET_DIR/busybox"
+TARGET_MAGISK_BOOT="$TARGET_DIR/magiskboot"
+TARGET_SHELLCODE="$TARGET_DIR/BootShim.Dualboot.bin"
+TARGET_KP="$TARGET_DIR/kernelpatcher"
+TARGET_UEFI="$TARGET_DIR/uefi.fd"
+TARGET_BOOT="/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix)"
+
+log() {
+    echo ""
+    echo "[$(date +"%H:%M:%S")] $1"
+}
+
+# Check device compatibility
+DEVICE_CODENAME=$(getprop ro.product.device)
+if [ "$DEVICE_CODENAME" != "nabu" ]; then
+    log "[ERROR] Unsupported device: $DEVICE_CODENAME"
+    exit 1
+fi
+
+log "[INFO] Easy EDK2-UEFI PATCHER for Xiaomi Pad 5 ($DEVICE_CODENAME)"
+log "[INFO] this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+
+# Function to download and set permissions
+download_and_set_permissions() {
+    local url=$1 dest_file=$2
+    log "[INFO] Downloading $(basename "$dest_file")..."
+    curl -s -L -o "$dest_file" "$url" || { log "[ERROR] Failed to download $(basename "$dest_file")"; exit 1; }
+    chmod 755 "$dest_file"
+    log "[SUCCESS] $(basename "$dest_file") ready."
+}
+
+mkdir -p "$TARGET_DIR"
+cd "$TARGET_DIR"
+
+# Download required binaries
+download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"
+download_and_set_permissions "$URL_MAGISK_BOOT" "$TARGET_MAGISK_BOOT"
+download_and_set_permissions "$URL_SHELLCODE" "$TARGET_SHELLCODE"
+download_and_set_permissions "$URL_KP" "$TARGET_KP"
+download_and_set_permissions "$URL_UEFI" "$TARGET_UEFI"
+
+log "[INFO] Backing up boot.img..."
+$TARGET_BUSYBOX dd if="$TARGET_BOOT" of="$TARGET_DIR/boot.img" bs=8M || { log "[ERROR] Failed to dump boot image!"; exit 1; }
+$TARGET_BUSYBOX cp -f "$TARGET_DIR/boot.img" "/sdcard/boot_backup$(getprop ro.boot.slot_suffix).img"
+log "[SUCCESS] Boot image backup completed."
+
+log "[INFO] Unpacking boot.img..."
+$TARGET_MAGISK_BOOT unpack -h "$TARGET_DIR/boot.img" || { log "[ERROR] Failed to unpack image!"; exit 1; }
+log "[SUCCESS] Unpacking completed."
+
+log "[INFO] Checking for existing UEFI installation..."
+if [ "$($TARGET_BUSYBOX dd if="$TARGET_DIR/kernel" bs=1 count=8 skip=64 status=none)" = "EDK2-MSM" ]; then
+    log "[INFO] Patched boot.img with UEFI detected, updating..."
+    KERNEL_SIZE=$($TARGET_BUSYBOX dd if="$TARGET_DIR/kernel" bs=1 count=4 skip=48 status=none | od -An -t u | tr -d ' ')
+    if [ -z "$KERNEL_SIZE" ] || [ "$KERNEL_SIZE" -le 0 ]; then
+        log "[ERROR] Failed to extract valid kernel size!"
+        exit 1
+    fi
+    log "[INFO] Extracting original kernel size: $KERNEL_SIZE bytes"
+    $TARGET_BUSYBOX dd if="$TARGET_DIR/kernel" of="$TARGET_DIR/kernel_orig" bs=1 count=$KERNEL_SIZE status=none || { log "[ERROR] Failed to extract original kernel!"; exit 1; }
+else
+    log "[INFO] Stock boot.img detected, installing..."
+    mv "$TARGET_DIR/kernel" "$TARGET_DIR/kernel_orig"
+fi
+
+log "[INFO] Patching kernel..."
+PAYLOAD_SIZE=$($TARGET_BUSYBOX stat -c "%s" "$TARGET_UEFI")
+$TARGET_KP "$TARGET_DIR/kernel_orig" "$TARGET_SHELLCODE" $PAYLOAD_SIZE || { log "[ERROR] Kernel patching failed!"; exit 1; }
+log "[SUCCESS] Kernel patching completed."
+
+log "[INFO] Merging patched kernel with UEFI..."
+$TARGET_BUSYBOX cat "$TARGET_DIR/kernel_orig" "$TARGET_UEFI" > "$TARGET_DIR/kernel"
+rm -f "$TARGET_DIR/kernel_orig"
+log "[SUCCESS] Kernel merge completed."
+
+log "[INFO] Repacking boot.img..."
+$TARGET_MAGISK_BOOT repack "$TARGET_DIR/boot.img" || { log "[ERROR] Failed to repack boot image!"; exit 1; }
+$TARGET_MAGISK_BOOT cleanup
+log "[SUCCESS] Boot.img repacking completed."
+
+log "[INFO] Flashing new patched boot image..."
+$TARGET_BUSYBOX blockdev --setrw "$TARGET_BOOT"
+$TARGET_BUSYBOX dd if="$TARGET_DIR/new-boot.img" of="$TARGET_BOOT" bs=8M || { log "[ERROR] Failed to flash patched boot image!"; exit 1; }
+$TARGET_BUSYBOX cp -f "$TARGET_DIR/new-boot.img" "/sdcard/patched_boot.img"
+log "[SUCCESS] Patched boot backup completed."
+
+log "[INFO] Cleaning up temporary files..."
+rm -rf "$TARGET_DIR"
+log "[SUCCESS] Cleanup complete."
+
+log "[COMPLETED] edk2-msm UEFI installed successfully!"
+
+log "Do you want to reboot? (y/n)"
+read -r answer
+if [ "$answer" = "y" ]; then
+    log "Rebooting now..."
+    reboot
+else
+    log "Exiting..."
+    exit 0
+fi
