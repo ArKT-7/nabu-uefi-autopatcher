@@ -25,11 +25,12 @@ log() {
     echo "[$(date +"%H:%M:%S")] $1"
 }
 
+DEVICE_CODENAME=$(getprop ro.product.device)
+
 log "[INFO] Easy EDK2-UEFI PATCHER for Xiaomi Pad 5 ($DEVICE_CODENAME)"
 log "[INFO] this script is Written and Made By °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'"
 
 # Check device compatibility
-DEVICE_CODENAME=$(getprop ro.product.device)
 if [ "$DEVICE_CODENAME" != "nabu" ]; then
     log "[ERROR] Unsupported device: $DEVICE_CODENAME"
     exit 1
