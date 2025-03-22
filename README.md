@@ -8,5 +8,5 @@ su -c "cd / && mkdir -p /dev/tmp && cd /dev/tmp && curl -sSL -o EDK2_Patcher htt
 
 ### For Magnetic cover DBKP based Aloha UEFI 
 ```bash
-su -c "cd / && mkdir -p /dev/tmp && cd /dev/tmp && curl -sSL -o Aloha-Patcher https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/Aloha-Patcher && chmod 777 Aloha-Patcher && su -c ./Aloha-Patcher"
+su -c "cd / && mkdir -p /dev/tmp && cd /dev/tmp && curl -sSL -o Aloha_Patcher https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/Aloha_Patcher && chmod 777 Aloha_Patcher && su -c ./Aloha_Patcher"
 ```
