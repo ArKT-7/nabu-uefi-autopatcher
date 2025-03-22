@@ -97,7 +97,8 @@ log "[SUCCESS] Boot.img repacking completed."
 
 log "[INFO] Flashing new patched boot image..."
 $TARGET_BUSYBOX blockdev --setrw "$TARGET_BOOT"
-$TARGET_BUSYBOX dd if="$TARGET_DIR/new-boot.img" of="$TARGET_BOOT" bs=8M || { log "[ERROR] Failed to flash patched boot image!"; exit 1; }
+output=$($TARGET_BUSYBOX dd if="$TARGET_DIR/new-boot.IMG" of="$TARGET_BOOT" bs=8M 2>&1) || { log "[ERROR] Failed to flash patched boot image!"; exit 1; }
+echo "$output" | $TARGET_BUSYBOX tail -n 1
 $TARGET_BUSYBOX cp -f "$TARGET_DIR/new-boot.img" "/sdcard/patched_boot.img"
 log "[SUCCESS] Patched boot backup completed."
 
