@@ -2,12 +2,12 @@
 #
 # Copyright (C) 2025-26 https://github.com/ArKT-7/nabu-uefi-autopatcher
 #
-# Made for easy UEFI boot patching with the EDK2 boot menu using a single command—no recovery or ZIP flashing required. Primarily used for booting Linux on the Xiaomi Pad 5 (Nabu).
+# Made for easy UEFI boot patching with the EDK2 boot menu using a single command, no recovery or ZIP flashing required. Primarily used for booting Linux on the Xiaomi Pad 5 (Nabu).
 #
 
 # Define URLs and target paths
-URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/edk2/busybox"
-URL_MAGISK_BOOT="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/edk2/magiskboot"
+URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/busybox"
+URL_MAGISK_BOOT="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/magiskboot"
 URL_SHELLCODE="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/edk2/BootShim.Dualboot.bin"
 URL_KP="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/edk2/kernelpatcher"
 URL_UEFI="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/edk2/uefi.fd"
