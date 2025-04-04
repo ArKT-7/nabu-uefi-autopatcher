@@ -13,6 +13,7 @@ URL_SHELLCODE="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/ma
 URL_KP="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/DualBootKernelPatcher"
 URL_UEFI_V_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/aloha_V_SB.fd"
 URL_UEFI_SURFACE_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/surface_SB.fd"
+URL_UEFI_GRADIENT_W11_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/gradient_w11_SB.fd"
 
 TARGET_DIR="/dev/tmp/uefi-install"
 TARGET_BUSYBOX="$TARGET_DIR/busybox"
@@ -65,9 +66,10 @@ while true; do
     echo "\nChoose a boot logo option:\n"
     echo "1. Aloha Inverted V Logo"
     echo "2. Surface Book White Windows Logo"
-    echo "3. Exit (btw will add more soon)\n"
+    echo "3. Gradient Windows 11 Logo"
+    echo "4. Exit (btw will add more soon)\n"
 
-    echo -n "Enter your choice (1/2/3): "
+    echo -n "Enter your choice (1/2/3/4): "
     read choice
     
     case "$choice" in
@@ -82,6 +84,11 @@ while true; do
             break
             ;;
         3)
+            echo "\nYou selected Gradient Windows 11 Logo."
+            download_and_set_permissions "$URL_UEFI_GRADIENT_W11_SB" "$TARGET_UEFI"
+            break
+            ;;
+        4)
             echo "Exiting."
             exit 0
             ;;
