@@ -11,7 +11,7 @@ URL_MAGISK_BOOT="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/
 URL_DBKP_CFG="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/DualBoot.Sm8150.cfg"
 URL_SHELLCODE="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/ShellCode.Nabu.bin"
 URL_KP="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/DualBootKernelPatcher"
-URL_UEFI="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/Aloha_uefi.fd"
+URL_UEFI_V_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/aloha_V_SB.fd"
 
 TARGET_DIR="/dev/tmp/uefi-install"
 TARGET_BUSYBOX="$TARGET_DIR/busybox"
@@ -19,7 +19,7 @@ TARGET_MAGISK_BOOT="$TARGET_DIR/magiskboot"
 TARGET_DBKP_CFG="$TARGET_DIR/DualBoot.Sm8150.cfg"
 TARGET_SHELLCODE="$TARGET_DIR/ShellCode.Nabu.bin"
 TARGET_KP="$TARGET_DIR/DualBootKernelPatcher"
-TARGET_UEFI="$TARGET_DIR/Aloha_uefi.fd"
+TARGET_UEFI="$TARGET_DIR/uefi.fd"
 TARGET_BOOT="/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix)"
 
 log() {
@@ -44,7 +44,7 @@ log "[INFO] MAGNETIC WIN UEFI PATCHER for Xiaomi Pad 5 ($DEVICE_CODENAME)"
 download_and_set_permissions() {
     local url=$1 dest_file=$2
     log "[INFO] Downloading $(basename "$dest_file")..."
-    curl -s -L -o "$dest_file" "$url" || { log "[ERROR] Failed to download $(basename "$dest_file")"; exit 1; }
+    curl -L --progress-bar -o "$dest_file" "$url" || { log "[ERROR] Failed to download $(basename "$dest_file")"; exit 1; }
     chmod 755 "$dest_file"
     log "[SUCCESS] $(basename "$dest_file") ready."
 }
@@ -58,7 +58,7 @@ download_and_set_permissions "$URL_MAGISK_BOOT" "$TARGET_MAGISK_BOOT"
 download_and_set_permissions "$URL_DBKP_CFG" "$TARGET_DBKP_CFG"
 download_and_set_permissions "$URL_SHELLCODE" "$TARGET_SHELLCODE"
 download_and_set_permissions "$URL_KP" "$TARGET_KP"
-download_and_set_permissions "$URL_UEFI" "$TARGET_UEFI"
+download_and_set_permissions "$URL_UEFI_V_SB" "$TARGET_UEFI"
 
 log "[INFO] Backing up boot.img..."
 output=$($TARGET_BUSYBOX dd if="$TARGET_BOOT" of="$TARGET_DIR/boot.img" bs=8M 2>&1) || { log "[ERROR] Failed to dump boot image!"; exit 1; }
