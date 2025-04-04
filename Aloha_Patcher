@@ -62,10 +62,10 @@ download_and_set_permissions "$URL_KP" "$TARGET_KP"
 
 # Loop until a valid option is chosen
 while true; do
-    echo "Choose a boot logo option:"
+    echo "\nChoose a boot logo option:\n"
     echo "1. Aloha Inverted V Logo"
     echo "2. Surface Book White Windows Logo"
-    echo "3. Exit (btw will add more soon)"
+    echo "3. Exit (btw will add more soon)\n"
 
     echo -n "Enter your choice (1/2/3): "
     read choice
