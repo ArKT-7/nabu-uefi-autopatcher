@@ -40,7 +40,7 @@ fi
 download_and_set_permissions() {
     local url=$1 dest_file=$2
     log "[INFO] Downloading $(basename "$dest_file")..."
-    curl -s -L -o "$dest_file" "$url" || { log "[ERROR] Failed to download $(basename "$dest_file")"; exit 1; }
+    curl -L --progress-bar -o "$dest_file" "$url" || { log "[ERROR] Failed to download $(basename "$dest_file")"; exit 1; }
     chmod 755 "$dest_file"
     log "[SUCCESS] $(basename "$dest_file") ready."
 }
@@ -94,7 +94,7 @@ log "[INFO] Repacking boot.img..."
 $TARGET_MAGISK_BOOT repack "$TARGET_DIR/boot.img" || { log "[ERROR] Failed to repack boot image!"; exit 1; }
 $TARGET_MAGISK_BOOT cleanup
 log "[SUCCESS] Boot.img repacking completed."
-
+sleep 3
 log "[INFO] Flashing new patched boot image..."
 $TARGET_BUSYBOX blockdev --setrw "$TARGET_BOOT"
 output=$($TARGET_BUSYBOX dd if="$TARGET_DIR/new-boot.IMG" of="$TARGET_BOOT" bs=8M 2>&1) || { log "[ERROR] Failed to flash patched boot image!"; exit 1; }
