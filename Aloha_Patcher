@@ -67,7 +67,7 @@ while true; do
     echo "2. Surface Book White Windows Logo"
     echo "3. Exit (btw will add more soon)"
     
-    read -p "Enter your choice (1/2/3): " choice
+    read -r "Enter your choice (1/2/3): " choice
     
     case $choice in
         1)
