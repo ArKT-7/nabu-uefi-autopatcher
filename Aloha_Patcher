@@ -66,17 +66,18 @@ while true; do
     echo "1. Aloha Inverted V Logo"
     echo "2. Surface Book White Windows Logo"
     echo "3. Exit (btw will add more soon)"
+
+    echo -n "Enter your choice (1/2/3): "
+    read choice
     
-    read -r "Enter your choice (1/2/3): " choice
-    
-    case $choice in
+    case "$choice" in
         1)
-            echo "You selected Aloha Inverted V Logo."
+            echo "\nYou selected Aloha Inverted V Logo."
             download_and_set_permissions "$URL_UEFI_V_SB" "$TARGET_UEFI"
             break
             ;;
         2)
-            echo "You selected Surface Book White Windows Logo."
+            echo "\nYou selected Surface Book White Windows Logo."
             download_and_set_permissions "$URL_UEFI_SURFACE_SB" "$TARGET_UEFI"
             break
             ;;
@@ -85,7 +86,7 @@ while true; do
             exit 0
             ;;
         *)
-            echo "Invalid choice. Please try again."
+            echo "\nInvalid choice. Please try again.\n"
             ;;
     esac
 done
