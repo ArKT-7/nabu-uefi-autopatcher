@@ -12,6 +12,7 @@ URL_DBKP_CFG="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/mai
 URL_SHELLCODE="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/ShellCode.Nabu.bin"
 URL_KP="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/DualBootKernelPatcher"
 URL_UEFI_V_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/aloha_V_SB.fd"
+URL_UEFI_SURFACE_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/surface_SB.fd"
 
 TARGET_DIR="/dev/tmp/uefi-install"
 TARGET_BUSYBOX="$TARGET_DIR/busybox"
@@ -58,7 +59,36 @@ download_and_set_permissions "$URL_MAGISK_BOOT" "$TARGET_MAGISK_BOOT"
 download_and_set_permissions "$URL_DBKP_CFG" "$TARGET_DBKP_CFG"
 download_and_set_permissions "$URL_SHELLCODE" "$TARGET_SHELLCODE"
 download_and_set_permissions "$URL_KP" "$TARGET_KP"
-download_and_set_permissions "$URL_UEFI_V_SB" "$TARGET_UEFI"
+
+# Loop until a valid option is chosen
+while true; do
+    echo "Choose a boot logo option:"
+    echo "1. Aloha Inverted V Logo"
+    echo "2. Surface Book White Windows Logo"
+    echo "3. Exit (btw will add more soon)"
+    
+    read -p "Enter your choice (1/2/3): " choice
+    
+    case $choice in
+        1)
+            echo "You selected Aloha Inverted V Logo."
+            download_and_set_permissions "$URL_UEFI_V_SB" "$TARGET_UEFI"
+            break
+            ;;
+        2)
+            echo "You selected Surface Book White Windows Logo."
+            download_and_set_permissions "$URL_UEFI_SURFACE_SB" "$TARGET_UEFI"
+            break
+            ;;
+        3)
+            echo "Exiting."
+            exit 0
+            ;;
+        *)
+            echo "Invalid choice. Please try again."
+            ;;
+    esac
+done
 
 log "[INFO] Backing up boot.img..."
 output=$($TARGET_BUSYBOX dd if="$TARGET_BOOT" of="$TARGET_DIR/boot.img" bs=8M 2>&1) || { log "[ERROR] Failed to dump boot image!"; exit 1; }
