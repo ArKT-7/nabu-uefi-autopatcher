@@ -14,6 +14,7 @@ URL_KP="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/
 URL_UEFI_V_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/aloha_V_SB.fd"
 URL_UEFI_SURFACE_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/surface_SB.fd"
 URL_UEFI_GRADIENT_W11_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/gradient_w11_SB.fd"
+URL_UEFI_SIRTORIUS_M_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/SirTorius_M_SB.fd"
 
 TARGET_DIR="/dev/tmp/uefi-install"
 TARGET_BUSYBOX="$TARGET_DIR/busybox"
@@ -67,19 +68,20 @@ while true; do
     echo "1. Aloha Inverted V Logo"
     echo "2. Surface Book White Windows Logo"
     echo "3. Gradient Windows 11 Logo"
-    echo "4. Exit (btw will add more soon)\n"
+    echo "4. SirTorius M Logo"
+    echo "5. Exit (btw will add more soon)\n"
 
-    echo -n "Enter your choice (1/2/3/4): "
+    echo -n "Enter your choice (1/2/3/4/5): "
     read choice
     
     case "$choice" in
         1)
-            echo "\nYou selected Aloha Inverted V Logo."
+            echo "\nYou selected Aloha 'Inverted V' Logo."
             download_and_set_permissions "$URL_UEFI_V_SB" "$TARGET_UEFI"
             break
             ;;
         2)
-            echo "\nYou selected Surface Book White Windows Logo."
+            echo "\nYou selected 'Surface Book' White Windows Logo."
             download_and_set_permissions "$URL_UEFI_SURFACE_SB" "$TARGET_UEFI"
             break
             ;;
@@ -89,6 +91,11 @@ while true; do
             break
             ;;
         4)
+            echo "\nYou selected Gradient SirTorius 'M' Logo."
+            download_and_set_permissions "$URL_UEFI_SIRTORIUS_M_SB" "$TARGET_UEFI"
+            break
+            ;;
+        5)
             echo "Exiting."
             exit 0
             ;;
