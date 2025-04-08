@@ -15,6 +15,7 @@ URL_UEFI_V_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/ma
 URL_UEFI_SURFACE_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/surface_SB.fd"
 URL_UEFI_GRADIENT_W11_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/gradient_w11_SB.fd"
 URL_UEFI_SIRTORIUS_M_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/SirTorius_M_SB.fd"
+URL_UEFI_NYANKO_SENSEI_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/Nyanko_Sensei_SB.fd"
 
 TARGET_DIR="/dev/tmp/uefi-install"
 TARGET_BUSYBOX="$TARGET_DIR/busybox"
@@ -69,7 +70,8 @@ while true; do
     echo "2. Surface Book White Windows Logo"
     echo "3. Gradient Windows 11 Logo"
     echo "4. SirTorius M Logo"
-    echo "5. Exit (btw will add more soon)\n"
+    echo "5. Nyanko Sensei (Madara) Logo"
+    echo "6. Exit (btw will add more soon)\n"
 
     echo -n "Enter your choice (1/2/3/4/5): "
     read choice
@@ -96,6 +98,11 @@ while true; do
             break
             ;;
         5)
+            echo "\nYou selected Nyanko Sensei 'Madara' Logo."
+            download_and_set_permissions "$URL_UEFI_NYANKO_SENSEI_SB" "$TARGET_UEFI"
+            break
+            ;;
+        6)
             echo "Exiting."
             exit 0
             ;;
