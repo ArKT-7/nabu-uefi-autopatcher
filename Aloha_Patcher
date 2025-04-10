@@ -73,7 +73,7 @@ while true; do
     echo "5. Nyanko Sensei (Madara) Logo"
     echo "6. Exit (btw will add more soon)\n"
 
-    echo -n "Enter your choice (1/2/3/4/5): "
+    echo -n "Enter your choice (1/2/3/4/5/6): "
     read choice
     
     case "$choice" in
