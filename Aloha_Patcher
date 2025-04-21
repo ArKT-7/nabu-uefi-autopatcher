@@ -16,6 +16,7 @@ URL_UEFI_SURFACE_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatc
 URL_UEFI_GRADIENT_W11_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/gradient_w11_SB.fd"
 URL_UEFI_SIRTORIUS_M_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/SirTorius_M_SB.fd"
 URL_UEFI_NYANKO_SENSEI_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/Nyanko_Sensei_SB.fd"
+URL_UEFI_JADEKUBPOM_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/JadeKubPom_SB.fd"
 
 TARGET_DIR="/dev/tmp/uefi-install"
 TARGET_BUSYBOX="$TARGET_DIR/busybox"
@@ -71,9 +72,10 @@ while true; do
     echo "3. Gradient Windows 11 Logo"
     echo "4. SirTorius M Logo"
     echo "5. Nyanko Sensei (Madara) Logo"
-    echo "6. Exit (btw will add more soon)\n"
+    echo "6. JadeKubPom logo"
+    echo "7. Exit (btw will add more soon)\n"
 
-    echo -n "Enter your choice (1/2/3/4/5/6): "
+    echo -n "Enter your choice (1/2/3/4/5/6/7): "
     read choice
     
     case "$choice" in
@@ -103,6 +105,11 @@ while true; do
             break
             ;;
         6)
+            echo "\nYou selected JadeKubPom Logo."
+            download_and_set_permissions "$URL_UEFI_JADEKUBPOM_SB" "$TARGET_UEFI"
+            break
+            ;;
+        7)
             echo "Exiting."
             exit 0
             ;;
