@@ -1,0 +1,171 @@
+#!/bin/sh
+#
+# Copyright (C) 2025-26 https://github.com/ArKT-7/nabu-uefi-autopatcher
+#
+# Made for easy UEFI boot patching to enable dualbooting on using magnetic cover using a single command, no recovery or ZIP flashing required, for booting Windows on the Xiaomi Pad 5 (Nabu).
+#
+
+# Define URLs and target paths
+URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/busybox"
+URL_MAGISK_BOOT="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/magiskboot"
+URL_DBKP_CFG="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/DualBoot.Sm8150.cfg"
+URL_SHELLCODE="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/ShellCode.Nabu.bin"
+URL_KP="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/DualBootKernelPatcher"
+
+URL_UEFI_ALOHA_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/aloha_EFI_SB.fd"
+URL_UEFI_W11_WHITE_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/Win11-White_EFI_SB.fd"
+URL_UEFI_W11_GRADIENT_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/win11-gradient_EFI_SB.fd"
+URL_UEFI_NYANKO_SENSEI_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/Nyanko-Sensei_EFI_SB.fd"
+URL_UEFI_SIRTORIUS_M_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/SirTorius-M_EFI_SB.fd"
+URL_UEFI_JADEKUBPOM_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/JadeKubPom_EFI_SB.fd"
+URL_UEFI_CAMBODIA_PORL_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/Cambodia-porl_EFI_SB.fd"
+
+TARGET_DIR="/dev/tmp/uefi-install"
+TARGET_BUSYBOX="$TARGET_DIR/busybox"
+TARGET_MAGISK_BOOT="$TARGET_DIR/magiskboot"
+TARGET_DBKP_CFG="$TARGET_DIR/DualBoot.Sm8150.cfg"
+TARGET_SHELLCODE="$TARGET_DIR/ShellCode.Nabu.bin"
+TARGET_KP="$TARGET_DIR/DualBootKernelPatcher"
+TARGET_UEFI="$TARGET_DIR/uefi.fd"
+TARGET_BOOT="/dev/block/platform/soc/1d84000.ufshc/by-name/boot$(getprop ro.boot.slot_suffix)"
+
+log() {
+    echo ""
+    echo "[$(date +"%H:%M:%S")] $1"
+}
+
+DEVICE_CODENAME=$(getprop ro.product.device)
+
+log "[INFO] Easy Magnetic Case DBKP WINDOWS UEFI PATCHER for Xiaomi Pad 5 ($DEVICE_CODENAME)"
+log "[INFO] this script is Written and Made By ArKT / °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+
+# Check device compatibility
+if [ "$DEVICE_CODENAME" != "nabu" ]; then
+    log "[ERROR] Unsupported device: $DEVICE_CODENAME"
+    exit 1
+fi
+
+log "[INFO] MAGNETIC WIN UEFI PATCHER for Xiaomi Pad 5 ($DEVICE_CODENAME)"
+
+# Function to download and set permissions
+download_and_set_permissions() {
+    local url=$1 dest_file=$2
+    log "[INFO] Downloading $(basename "$dest_file")..."
+    curl -L --progress-bar -o "$dest_file" "$url" || { log "[ERROR] Failed to download $(basename "$dest_file")"; exit 1; }
+    chmod 755 "$dest_file"
+    log "[SUCCESS] $(basename "$dest_file") ready."
+}
+
+mkdir -p "$TARGET_DIR"
+cd "$TARGET_DIR"
+
+# Download required binaries
+download_and_set_permissions "$URL_BUSYBOX" "$TARGET_BUSYBOX"
+download_and_set_permissions "$URL_MAGISK_BOOT" "$TARGET_MAGISK_BOOT"
+download_and_set_permissions "$URL_DBKP_CFG" "$TARGET_DBKP_CFG"
+download_and_set_permissions "$URL_SHELLCODE" "$TARGET_SHELLCODE"
+download_and_set_permissions "$URL_KP" "$TARGET_KP"
+
+# Loop until a valid option is chosen
+while true; do
+    echo "\nChoose a Boot Logo Option:\n"
+    echo "1. Aloha Inverted V, A Logo"
+    echo "2. Windows 11 White Square Logo"
+    echo "3. Windows 11 Gradient Rounded Logo"
+    echo "4. Nyanko Sensei (Madara) Logo"
+    echo "5. SirTorius M Logo"
+    echo "6. JadeKubPom Logo"
+	echo "7. Cambodia Porl Logo"
+    echo "8. Exit (btw will add more soon)\n"
+
+    echo -n "Enter your choice (1/2/3/4/5/6/7/8): "
+    read choice
+    
+    case "$choice" in
+        1)
+            echo "\nYou selected Aloha Inverted V, A Logo."
+            download_and_set_permissions "$URL_UEFI_ALOHA_SB" "$TARGET_UEFI"
+            break
+            ;;
+        2)
+            echo "\nYou selected Windows 11 White Square Logo."
+            download_and_set_permissions "$URL_UEFI_W11_WHITE_SB" "$TARGET_UEFI"
+            break
+            ;;
+        3)
+            echo "\nYou selected Windows 11 Gradient Rounded Logo."
+            download_and_set_permissions "$URL_UEFI_W11_GRADIENT_SB" "$TARGET_UEFI"
+            break
+            ;;
+        4)
+            echo "\nYou selected Nyanko Sensei (Madara) Logo."
+            download_and_set_permissions "$URL_UEFI_NYANKO_SENSEI_SB" "$TARGET_UEFI"
+            break
+            ;;
+        5)
+            echo "\nYou selected SirTorius M Logo."
+            download_and_set_permissions "$URL_UEFI_SIRTORIUS_M_SB" "$TARGET_UEFI"
+            break
+            ;;
+        6)
+            echo "\nYou selected JadeKubPom logo."
+            download_and_set_permissions "$URL_UEFI_JADEKUBPOM_SB" "$TARGET_UEFI"
+            break
+            ;;
+        7)
+            echo "\nYou selected Cambodia Porl Logo."
+            download_and_set_permissions "$URL_UEFI_CAMBODIA_PORL_SB" "$TARGET_UEFI"
+            break
+            ;;
+        8)
+            echo "Exiting."
+            exit 0
+            ;;
+        *)
+            echo "\nInvalid choice. Please try again.\n"
+            ;;
+    esac
+done
+
+log "[INFO] Backing up boot.img..."
+output=$($TARGET_BUSYBOX dd if="$TARGET_BOOT" of="$TARGET_DIR/boot.img" bs=8M 2>&1) || { log "[ERROR] Failed to dump boot image!"; exit 1; }
+echo "$output" | $TARGET_BUSYBOX tail -n 1
+$TARGET_BUSYBOX cp -f "$TARGET_DIR/boot.img" "/sdcard/boot_backup$(getprop ro.boot.slot_suffix).img"
+log "[SUCCESS] Boot image backup completed."
+
+log "[INFO] Unpacking boot.img..."
+$TARGET_MAGISK_BOOT unpack -h "$TARGET_DIR/boot.img" || { log "[ERROR] Failed to unpack image!"; exit 1; }
+log "[SUCCESS] Unpacking completed."
+
+log "[INFO] Patching kernel..."
+$TARGET_KP kernel $TARGET_UEFI patchedKernel $TARGET_DBKP_CFG $TARGET_SHELLCODE || { log "[ERROR] Kernel patching failed!"; exit 1; }
+$TARGET_BUSYBOX mv patchedKernel kernel
+log "[SUCCESS] Kernel patching completed."
+
+log "[INFO] Repacking boot.img..."
+$TARGET_MAGISK_BOOT repack "$TARGET_DIR/boot.img" || { log "[ERROR] Failed to repack boot image!"; exit 1; }
+$TARGET_MAGISK_BOOT cleanup
+log "[SUCCESS] Boot.img repacking completed."
+
+log "[INFO] Flashing new patched boot image..."
+$TARGET_BUSYBOX blockdev --setrw "$TARGET_BOOT"
+output=$($TARGET_BUSYBOX dd if="$TARGET_DIR/new-boot.img" of="$TARGET_BOOT" bs=8M 2>&1) || { log "[ERROR] Failed to flash patched boot image!"; exit 1; }
+echo "$output" | $TARGET_BUSYBOX tail -n 1
+$TARGET_BUSYBOX cp -f "$TARGET_DIR/new-boot.img" "/sdcard/patched_boot.img"
+log "[SUCCESS] Patched boot backup completed."
+
+log "[INFO] Cleaning up temporary files..."
+rm -rf "$TARGET_DIR"
+log "[SUCCESS] Cleanup complete."
+
+log "[COMPLETED] Magnetic cover UEFI Patch for Windows installed successfully!"
+
+log "Do you want to reboot? (y/n)"
+read -r answer
+if [ "$answer" = "y" ]; then
+    log "Rebooting now..."
+    reboot
+else
+    log "Exiting..."
+    exit 0
+fi
