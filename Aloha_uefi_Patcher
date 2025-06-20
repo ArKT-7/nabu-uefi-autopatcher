@@ -20,6 +20,7 @@ URL_UEFI_SIRTORIUS_M_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-auto
 URL_UEFI_JADEKUBPOM_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/JadeKubPom_EFI_SB.fd"
 URL_UEFI_CAMBODIA_PORL_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/Cambodia-porl_EFI_SB.fd"
 URL_UEFI_XIAOMI_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/xiaomi_EFI_SB.fd"
+URL_UEFI_MI_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/MI_EFI_SB.fd"
 
 TARGET_DIR="/dev/tmp/uefi-install"
 TARGET_BUSYBOX="$TARGET_DIR/busybox"
@@ -78,9 +79,10 @@ while true; do
     echo "6. JadeKubPom Logo"
 	echo "7. Cambodia Porl Logo"
 	echo "8. Xiaomi Logo"
-    echo "9. Exit (btw will add more soon)\n"
+	echo "9. MI Logo"
+    echo "10. Exit (btw will add more soon)\n"
 
-    echo -n "Enter your choice (1/2/3/4/5/6/7/8/9): "
+    echo -n "Enter your choice (1 to 10): "
     read choice
     
     case "$choice" in
@@ -125,6 +127,11 @@ while true; do
             break
             ;;
         9)
+            echo "\nYou selected MI Logo."
+            download_and_set_permissions "$URL_UEFI_MI_SB" "$TARGET_UEFI"
+            break
+            ;;
+        10)
             echo "Exiting."
             exit 0
             ;;
