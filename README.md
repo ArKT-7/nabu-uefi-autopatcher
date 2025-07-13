@@ -1,13 +1,18 @@
-# nabu-uefi-autopatcher
-A one-command UEFI Dual Boot Kernel patcher for Xiaomi Pad 5 (Nabu) that installs UEFI Aloha or EDK2 boot menu without the need to flash any ZIP files or enter recovery mode. Fully automated and runs directly from Termux or shell.
-## Test runs - copy and paste in termux with root access
+# Nabu Dual Boot Kernel Patcher for Windows UEFI
+## One-line command Dual Boot Kernel patcher for Xiaomi Pad 5 (Nabu)
+### Installs UEFI based on the Aloha project to boot Windows using magnetic case or volume button methods, Includes extra logo options and requires no flashing of ZIP files or entering recovery mode, Fully automated and runs directly from `Termux` or `adb shell`
 
-### For Magnetic cover DBKP based Aloha Windows UEFI 
+### 1. Install Termux apk
+## `>_` [Downlaod Termux app](https://f-droid.org/repo/com.termux_1000.apk)
+
+### 2. Open Termux app and Type
+> [!WARNING]
+> - **Make sure to give superuser (root) permission to Termux/shell app in KSU or Magisk**
 ```bash
-su -c "cd / && mkdir -p /dev/tmp && cd /dev/tmp && curl -sSL -o Aloha_uefi_Patcher https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/Aloha_uefi_Patcher && chmod 777 Aloha_uefi_Patcher && su -c ./Aloha_uefi_Patcher"
+su -c "cd / && mkdir -p /dev/arkt && cd /dev/arkt && curl -sSLO https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/dbkp_uefi_patcher && chmod +x * && su -c ./dbkp_uefi_patcher"
 ```
-
-### For EDK2 Boot menu UEFI 
+> [!NOTE]
+> - **Copy this command and Paste if upper one not work**
 ```bash
-su -c "cd / && mkdir -p /dev/tmp && cd /dev/tmp && curl -sSL -o EDK2_uefi_Patcher https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/EDK2_uefi_Patcher && chmod 777 EDK2_uefi_Patcher && su -c ./EDK2_uefi_Patcher"
+cd ~ && arkt=https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main && mkdir -p arkt && cd arkt && curl -sSLO $arkt/dbkp_uefi_patcher && curl -sSLO $arkt/bin/curl && chmod +x * && su -c "export PATH=\$PWD:\$PATH && ./dbkp_uefi_patcher"
 ```
