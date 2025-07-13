@@ -137,7 +137,7 @@ log "[INFO] This script is Written and Made By ArKT / °⊥⋊ɹ∀°, Telegram 
 # Check device compatibility
 if [ "$DEVICE_CODENAME" != "nabu" ]; then
     log "[ERROR] Unsupported device: $DEVICE_CODENAME"
-    #exit 1
+    exit 1
 fi
 
 log "[INFO] Dual Boot Kernel Patcher with Magnetic case or Volume buttons for Windows UEFI for ($DEVICE_CODENAME)"
@@ -283,7 +283,7 @@ while true; do
             ;;
     esac
 done
-exit
+
 log "[INFO] Backing up boot.img..."
 output=$($TARGET_BUSYBOX dd if="$TARGET_BOOT" of="$TARGET_DIR/boot.img" bs=8M 2>&1) || { log "[ERROR] Failed to dump boot image!"; exit 1; }
 echo "$output" | $TARGET_BUSYBOX tail -n 1
