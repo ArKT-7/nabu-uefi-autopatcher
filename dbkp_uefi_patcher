@@ -2,27 +2,30 @@
 #
 # Copyright (C) 2025-26 https://github.com/ArKT-7/nabu-uefi-autopatcher
 #
-# Made for easy UEFI boot patching to enable dualbooting on using magnetic cover using a single command, no recovery or ZIP flashing required, for booting Windows on the Xiaomi Pad 5 (Nabu).
+# Made for easy UEFI dual boot kernel patching to enable dualbooting on using magnetic cover/case or Volume buttons using a single command, for booting Windows on the Xiaomi Pad 5 (Nabu).
 #
 
 # Define URLs and target paths
-URL_BUSYBOX="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/busybox"
-URL_MAGISK_BOOT="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/magiskboot"
-URL_DBKP_CFG="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/DualBoot.Sm8150.cfg"
-URL_SHELLCODE="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/ShellCode.Nabu.bin"
-URL_KP="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/DualBootKernelPatcher"
+BASE_URL="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main"
+URL_BUSYBOX="$BASE_URL/bin/busybox"
+URL_MAGISK_BOOT="$BASE_URL/bin/magiskboot"
+URL_DBKP_CFG="$BASE_URL/bin/aloha/DualBoot.Sm8150.cfg"
+URL_SHELLCODE="$BASE_URL/bin/aloha/ShellCode.Nabu.bin"
+URL_KP="$BASE_URL/bin/aloha/DualBootKernelPatcher"
 
-URL_UEFI_ALOHA_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/aloha_EFI_SB.fd"
-URL_UEFI_W11_WHITE_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/Win11-White_EFI_SB.fd"
-URL_UEFI_W11_GRADIENT_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/win11-gradient_EFI_SB.fd"
-URL_UEFI_NYANKO_SENSEI_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/Nyanko-Sensei_EFI_SB.fd"
-URL_UEFI_SIRTORIUS_M_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/SirTorius-M_EFI_SB.fd"
-URL_UEFI_JADEKUBPOM_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/JadeKubPom_EFI_SB.fd"
-URL_UEFI_CAMBODIA_PORL_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/Cambodia-porl_EFI_SB.fd"
-URL_UEFI_XIAOMI_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/xiaomi_EFI_SB.fd"
-URL_UEFI_MI_WHITE_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/MI-White_EFI_SB.fd"
-URL_UEFI_MI_ORANGE_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/MI-Orange_EFI_SB.fd"
-URL_UEFI_WINDROID_SB="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/bin/aloha/fd-files/WinDroid_EFI_SB.fd"
+BASE_URL_MAGNETIC="$BASE_URL/bin/aloha/fd-files/magnetic"
+BASE_URL_VOLBUTTON="$BASE_URL/bin/aloha/fd-files/vol-button"
+UEFI_ALOHA_SB="aloha_EFI_SB.fd"
+UEFI_W11_WHITE_SB="Win11-White_EFI_SB.fd"
+UEFI_W11_GRADIENT_SB="win11-gradient_EFI_SB.fd"
+UEFI_NYANKO_SENSEI_SB="Nyanko-Sensei_EFI_SB.fd"
+UEFI_SIRTORIUS_M_SB="SirTorius-M_EFI_SB.fd"
+UEFI_JADEKUBPOM_SB="JadeKubPom_EFI_SB.fd"
+UEFI_CAMBODIA_PORL_SB="Cambodia-porl_EFI_SB.fd"
+UEFI_XIAOMI_SB="xiaomi_EFI_SB.fd"
+UEFI_MI_WHITE_SB="MI-White_EFI_SB.fd"
+UEFI_MI_ORANGE_SB="MI-Orange_EFI_SB.fd"
+UEFI_WINDROID_SB="WinDroid_EFI_SB.fd"
 
 TARGET_DIR="/dev/tmp/uefi-install"
 TARGET_BUSYBOX="$TARGET_DIR/busybox"
@@ -40,25 +43,104 @@ log() {
 
 DEVICE_CODENAME=$(getprop ro.product.device)
 
-log "[INFO] Easy Magnetic Case DBKP WINDOWS UEFI PATCHER for Xiaomi Pad 5 ($DEVICE_CODENAME)"
-log "[INFO] this script is Written and Made By ArKT / °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'"
-
-# Check device compatibility
-if [ "$DEVICE_CODENAME" != "nabu" ]; then
-    log "[ERROR] Unsupported device: $DEVICE_CODENAME"
-    exit 1
-fi
-
-log "[INFO] MAGNETIC WIN UEFI PATCHER for Xiaomi Pad 5 ($DEVICE_CODENAME)"
-
 # Function to download and set permissions
 download_and_set_permissions() {
     local url=$1 dest_file=$2
     log "[INFO] Downloading $(basename "$dest_file")..."
-    curl -L --progress-bar -o "$dest_file" "$url" || { log "[ERROR] Failed to download $(basename "$dest_file")"; exit 1; }
+    curl -L -# -o "$dest_file" "$url" || { log "[ERROR] Failed to download $(basename "$dest_file")"; exit 1; }
     chmod 755 "$dest_file"
-    log "[SUCCESS] $(basename "$dest_file") ready."
+    echo "[SUCCESS] $(basename "$dest_file") ready."
 }
+
+# Function to download files without setting permissions
+download_file() {
+    local url=$1 dest_file=$2
+    #echo "[INFO] Downloading $(basename "$dest_file")..."
+    curl -L -# -o "$dest_file" "$url" || { log "[ERROR] Failed to download $(basename "$dest_file")"; }
+    echo "[SUCCESS] $(basename "$dest_file") downloaded."
+}
+
+# Function to extract checksum from file
+get_checksum() {
+    grep "^$1=" "$CHECKSUM_FILE" | cut -d'=' -f2
+}
+
+# Function to verify checksum
+verify_checksum() {
+    local file="$1"
+    local expected_checksum="$2"
+
+    if [ -z "$expected_checksum" ]; then
+        echo "[WARNING] No checksum found for $(basename "$file"), can't proceed without verification!\n"
+        return 1
+    fi
+
+    local actual_checksum
+    actual_checksum=$($TARGET_BUSYBOX sha256sum "$file" | awk '{print $1}')
+
+    if [ "$actual_checksum" = "$expected_checksum" ]; then
+        #echo "[SUCCESS] Checksum verified for $(basename "$file")."
+        return 0
+    else
+        echo "\n[ERROR] Checksum mismatch for $(basename "$file")! Expected: $expected_checksum, Got: $actual_checksum"
+        return 1
+    fi
+}
+
+# Function to attempt download with checksum validation
+download_uefi() {
+    if [ "$DBKP_METHOD" -eq 0 ]; then
+        log "[INFO] Proceeding with Magnetic case Dualboot method!" 
+        PRIMARY_URL="$BASE_URL_MAGNETIC/$1"
+        FILE_KEY="MAG_$1"
+    else
+        log "[INFO] Proceeding with Volume Button Dualboot method!" 
+        PRIMARY_URL="$BASE_URL_VOLBUTTON/$1"
+        FILE_KEY="VOL_$1"
+    fi
+
+    FALLBACK_URL="$PRIMARY_URL"
+    DEST_FILE="$TARGET_UEFI"
+
+    log "[INFO] Downloading: $(basename "$DEST_FILE")"
+
+    EXPECTED_CHECKSUM=$(get_checksum "$FILE_KEY")
+
+    if download_file "$PRIMARY_URL" "$DEST_FILE"; then
+        if verify_checksum "$DEST_FILE" "$EXPECTED_CHECKSUM"; then
+            return 0  # Download successful with valid checksum
+        else
+            echo "[WARNING] Checksum mismatch, trying fallback...\n"
+            rm -f "$DEST_FILE"
+        fi
+    else
+        echo "[WARNING] Primary download failed, trying fallback...\n"
+    fi
+
+    # Try downloading from fallback source
+    if download_file "$FALLBACK_URL" "$DEST_FILE"; then
+        if verify_checksum "$DEST_FILE" "$EXPECTED_CHECKSUM"; then
+            return 0  # Fallback successful with valid checksum
+        else
+            echo "[ERROR] Fallback checksum mismatch! can't proceed...\n"
+            exit 1
+        fi
+    else
+        echo "[ERROR] Failed to download $(basename "$DEST_FILE") from both sources! can't proceed..."
+        exit 1
+    fi
+}
+
+log "[INFO] Dual Boot Kernel Patcher for Windows UEFI for Xiaomi Pad 5 ($DEVICE_CODENAME)"
+log "[INFO] This script is Written and Made By ArKT / °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'"
+
+# Check device compatibility
+if [ "$DEVICE_CODENAME" != "nabu" ]; then
+    log "[ERROR] Unsupported device: $DEVICE_CODENAME"
+    #exit 1
+fi
+
+log "[INFO] Dual Boot Kernel Patcher with Magnetic case or Volume buttons for Windows UEFI for ($DEVICE_CODENAME)"
 
 mkdir -p "$TARGET_DIR"
 cd "$TARGET_DIR"
@@ -69,6 +151,53 @@ download_and_set_permissions "$URL_MAGISK_BOOT" "$TARGET_MAGISK_BOOT"
 download_and_set_permissions "$URL_DBKP_CFG" "$TARGET_DBKP_CFG"
 download_and_set_permissions "$URL_SHELLCODE" "$TARGET_SHELLCODE"
 download_and_set_permissions "$URL_KP" "$TARGET_KP"
+# URL to the checksum file
+CHECKSUM_FILE="$TARGET_DIR/checksum.arkt"
+DBKP_METHOD=0 # set Magnetic case method as default
+
+# Download checksum file
+#echo "[INFO] Downloading checksum file..."
+if ! download_file "$BASE_URL/bin/checksum.arkt" "$CHECKSUM_FILE"; then
+    log "[ERROR] Failed to download checksum file, can't proceed without it!\n"
+    exit 1
+elif ! grep -q "=" "$CHECKSUM_FILE"; then
+    log "[ERROR] Checksum file is invalid or empty, can't proceed without it!\n"
+    exit 1
+fi
+
+while true; do
+    echo "\nChoose Which method you want to use:\n"
+    echo "1. Dualboot using Magnetic case/cover"
+    echo "2. Dualboot using Volume buttons"
+    echo "3. Exit script\n"
+
+    echo -n "Enter your choice (1, 2 or 3): "
+    read choice
+    
+    case "$choice" in
+        1)
+            echo "\nYou selected DualBoot usign Magnetic case/cover.\n\n"
+            DBKP_METHOD=0
+            echo "[INFO] When magnetic case is Closed, Windwos will start!"
+            echo "[INFO] When magnetic case is Open, Android will start!\n"
+            break
+            ;;
+        2)
+            echo "\nYou selected DualBoot using Volume buttons.\n\n"
+            DBKP_METHOD=1
+            echo "[INFO] When any button is pressed after MI logo, Windows will start!"
+            echo "[INFO] When None of the buttons is pressed, Android will start!\n"
+            break
+            ;;
+        3)
+            echo "Exiting."
+            exit 0
+            ;;
+        *)
+            echo "\nInvalid choice. Please try again.\n"
+            ;;
+    esac
+done
 
 # Loop until a valid option is chosen
 while true; do
@@ -92,57 +221,57 @@ while true; do
     case "$choice" in
         1)
             echo "\nYou selected Aloha Inverted V, A Logo."
-            download_and_set_permissions "$URL_UEFI_ALOHA_SB" "$TARGET_UEFI"
+            download_uefi "$UEFI_ALOHA_SB"
             break
             ;;
         2)
             echo "\nYou selected Windows 11 White Square Logo."
-            download_and_set_permissions "$URL_UEFI_W11_WHITE_SB" "$TARGET_UEFI"
+            download_uefi "$UEFI_W11_WHITE_SB"
             break
             ;;
         3)
             echo "\nYou selected Windows 11 Gradient Rounded Logo."
-            download_and_set_permissions "$URL_UEFI_W11_GRADIENT_SB" "$TARGET_UEFI"
+            download_uefi "$UEFI_W11_GRADIENT_SB"
             break
             ;;
         4)
             echo "\nYou selected Nyanko Sensei (Madara) Logo."
-            download_and_set_permissions "$URL_UEFI_NYANKO_SENSEI_SB" "$TARGET_UEFI"
+            download_uefi "$UEFI_NYANKO_SENSEI_SB"
             break
             ;;
         5)
             echo "\nYou selected SirTorius M Logo."
-            download_and_set_permissions "$URL_UEFI_SIRTORIUS_M_SB" "$TARGET_UEFI"
+            download_uefi "$UEFI_SIRTORIUS_M_SB"
             break
             ;;
         6)
             echo "\nYou selected JadeKubPom logo."
-            download_and_set_permissions "$URL_UEFI_JADEKUBPOM_SB" "$TARGET_UEFI"
+            download_uefi "$UEFI_JADEKUBPOM_SB"
             break
             ;;
         7)
             echo "\nYou selected Cambodia Porl Logo."
-            download_and_set_permissions "$URL_UEFI_CAMBODIA_PORL_SB" "$TARGET_UEFI"
+            download_uefi "$UEFI_CAMBODIA_PORL_SB"
             break
             ;;
         8)
             echo "\nYou selected Xiaomi Logo."
-            download_and_set_permissions "$URL_UEFI_XIAOMI_SB" "$TARGET_UEFI"
+            download_uefi "$UEFI_XIAOMI_SB"
             break
             ;;
         9)
             echo "\nYou selected MI Orange Logo."
-            download_and_set_permissions "$URL_UEFI_MI_WHITE_SB" "$TARGET_UEFI"
+            download_uefi "$UEFI_MI_WHITE_SB"
             break
             ;;
         10)
             echo "\nYou selected MI White Logo."
-            download_and_set_permissions "$URL_UEFI_MI_ORANGE_SB" "$TARGET_UEFI"
+            download_uefi "$UEFI_MI_ORANGE_SB"
             break
             ;;
         11)
 		    echo "\nYou selected WinDroid Logo."
-            download_and_set_permissions "$URL_UEFI_WINDROID_SB" "$TARGET_UEFI"
+            download_uefi "$UEFI_WINDROID_SB"
             break
             ;;
         12)
@@ -154,7 +283,7 @@ while true; do
             ;;
     esac
 done
-
+exit
 log "[INFO] Backing up boot.img..."
 output=$($TARGET_BUSYBOX dd if="$TARGET_BOOT" of="$TARGET_DIR/boot.img" bs=8M 2>&1) || { log "[ERROR] Failed to dump boot image!"; exit 1; }
 echo "$output" | $TARGET_BUSYBOX tail -n 1
