@@ -10,7 +10,7 @@
 > - **if you have ever used the DBKP boot image before or are currently using it,**
 > - **please flash the stock Android `boot.img` first before continuing (do NOT use DBKP boot).**
 
-> [!NOTE]
+> [!Important]
 > - **Make sure to give superuser (root) permission to Termux/shell app in KSU or Magisk**
 ```bash
 su -c "cd / && mkdir -p /dev/arkt && cd /dev/arkt && curl -sSLO https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main/dbkp_uefi_patcher && chmod +x * && su -c ./dbkp_uefi_patcher"
@@ -21,15 +21,25 @@ su -c "cd / && mkdir -p /dev/arkt && cd /dev/arkt && curl -sSLO https://raw.gith
 cd ~ && arkt=https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main && mkdir -p arkt && cd arkt && curl -sSLO $arkt/dbkp_uefi_patcher && curl -sSLO $arkt/bin/curl && chmod +x * && su -c "export PATH=\$PWD:\$PATH && ./dbkp_uefi_patcher"
 ```
 ## How to use:
-#### Booting into Windows - Magnetic Case method
-- Close the **magnetic case** and reboot (or turn on) your device.
 
-#### Booting into Windows - Volume button method
-- Reboot (or turn on) your device and hold any **volume button** once you see the unlock icon or just after Mi logo splash screen.
+### 1. If using **Magnetic Case** method:
 
-#### Booting into Android
-- Open the **magnetic case** and reboot (or turn on) your device.
-- If you are using the **volume button** method, simply do not press any volume button while (re)booting the device.
+> [!NOTE]
+> #### Boot into **Windows**:
+> - Close the **magnetic case** and reboot (or power on) your device.
+> #### Boot into **Android**:
+> - Open the **magnetic case** and reboot (or power on) your device.
+
+### 2. If using **Volume Button** method:
+
+> [!NOTE]
+> #### Boot into **Windows**:
+> - Reboot (or power on) your device and **hold any volume button** once you see the unlock icon or just after the Mi logo.
+> #### Boot into **Android**:
+> - Simply **don’t press any volume button** while rebooting or powering on the device.
+> #### Boot into **Recovery**:
+> - First, **do not press any button** when the Mi logo first appears and then your choosed uefi logo apprear — the screen will turn off and on.
+> - When screen on and the **Mi logo appears again** (indicating Android boot), **press and hold Volume Up** immediately — recovery will then launch.
 
 ## Finished!
 
