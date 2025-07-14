@@ -21,6 +21,18 @@ su -c "cd / && mkdir -p /dev/arkt && cd /dev/arkt && curl -sSLO https://raw.gith
 cd ~ && arkt=https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main && mkdir -p arkt && cd arkt && curl -sSLO $arkt/dbkp_uefi_patcher && curl -sSLO $arkt/bin/curl && chmod +x * && su -c "export PATH=\$PWD:\$PATH && ./dbkp_uefi_patcher"
 ```
 
+#### Booting into Windows - Magnetic Case method
+- Close the **magnetic case** and reboot (or turn on) your device.
+
+#### Booting into Windows - Volume button method
+- Reboot (or turn on) your device and hold any **volume button** once you see the unlock icon or just after Mi logo splash screen.
+
+#### Booting into Android
+- Open the **magnetic case** and reboot (or turn on) your device.
+- If you are using the **volume button** method, simply do not press any volume button while (re)booting the device.
+
+## Finished!
+
 ## These are the logos available as of now:
 > [!NOTE]
 > - **If Need help, have questions, or want to add your own logo? reach out to me on Telegram:** 
