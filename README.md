@@ -20,3 +20,28 @@ su -c "cd / && mkdir -p /dev/arkt && cd /dev/arkt && curl -sSLO https://raw.gith
 ```bash
 cd ~ && arkt=https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main && mkdir -p arkt && cd arkt && curl -sSLO $arkt/dbkp_uefi_patcher && curl -sSLO $arkt/bin/curl && chmod +x * && su -c "export PATH=\$PWD:\$PATH && ./dbkp_uefi_patcher"
 ```
+
+## These are the logos available as of now:
+> [!NOTE]
+> - **If Need help, have questions, or want to add your own logo? reach out to me on Telegram:** 
+> - [![Telegram](https://img.shields.io/badge/Chat-Telegram-brightgreen.svg?logo=telegram&style=flat-square)](https://telegram.me/ArKT_7) [![Telegram](https://img.shields.io/badge/Chat-Telegram-brightgreen.svg?logo=telegram&style=flat-square)](https://t.me/ArKT_7)
+
+| **1. Aloha Inverted V (Official)** | **2. Windows 11 White Square** |
+|------------------------------------|--------------------------------|
+| <p align="center"><a href="https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/aloha-uefi-nabu.zip"><img src="/bin/aloha/uefi-img-files/Custom-logos/Aloha-official-BootLogo.bmp" width="280"></a></p> | <p align="center"><a href="https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/Win11-White-uefi-nabu.zip"><img src="/bin/aloha/uefi-img-files/Custom-logos/W11-White-BootLogo.bmp" width="280"></a></p> |
+
+| **3. Windows 11 Gradient Rounded** | **4. Nyanko Sensei (Madara)** |
+|------------------------------------|--------------------------------|
+| <p align="center"><a href="https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/win11-gradient-uefi-nabu.zip"><img src="/bin/aloha/uefi-img-files/Custom-logos/W11-Gradient-BootLogo.bmp" width="280"></a></p> | <p align="center"><a href="https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/Nyanko-Sensei-uefi-nabu.zip"><img src="/bin/aloha/uefi-img-files/Custom-logos/Nyanko-Sensei-BootLogo.bmp" width="280"></a></p> |
+
+| **5. SirTorius M logo** | **6. JadeKubPom logo** |
+|------------------------------------|--------------------------------|
+| <p align="center"><a href="https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/SirTorius-M-uefi-nabu.zip"><img src="/bin/aloha/uefi-img-files/Custom-logos/M-for-SirTorius-BootLogo.bmp" width="280"></a></p> | <p align="center"><a href="https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/JadeKubPom-uefi-nabu.zip"><img src="/bin/aloha/uefi-img-files/Custom-logos/JadeKubPom-BootLogo.bmp" width="280"></a></p> |
+
+| **7. Cambodia Porl Logo** | **8. Xiaomi Logo** |
+|------------------------------------|--------------------------------|
+| <p align="center"><a href="https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/Cambodia-porl-uefi-nabu.zip"><img src="/bin/aloha/uefi-img-files/Custom-logos/Cambodia-for-porl-BootLogo.bmp" width="280"></a></p> | <p align="center"><a href="https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/Xiaomi-uefi-nabu.zip"><img src="/bin/aloha/uefi-img-files/Custom-logos/Xiaomi-BootLogo.bmp" width="280"></a></p> |
+
+| **9. MI Orange Logo** | **10. MI White Logo** |
+|------------------------------------|--------------------------------|
+| <p align="center"><a href="https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/MI-Orange-uefi-nabu.zip"><img src="/bin/aloha/uefi-img-files/Custom-logos/MI-Orange-BootLogo.bmp" width="280"></a></p> | <p align="center"><a href="https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/MI-white-uefi-nabu.zip"><img src="/bin/aloha/uefi-img-files/Custom-logos/MI-White-BootLogo.bmp" width="280"></a></p> |
