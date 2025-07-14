@@ -170,7 +170,7 @@ elif ! grep -q "=" "$CHECKSUM_FILE"; then
     exit 1
 fi
 
-echo "\n\n [WARNING] If you have ever used the DBKP boot image before or are currently using it,\n please flash the stock boot.img first before continuing (do NOT use DBKP boot).\n"
+echo "\n\n [WARNING] If you have ever used the DBKP boot image before or are currently using it,\n [NOTE] please flash the stock boot.img first before continuing (do NOT use DBKP boot).\n"
 
 while true; do
     echo "\nChoose Which method you want to use:\n"
