@@ -1,7 +1,7 @@
 # Nabu Dual Boot Kernel Patcher for Windows UEFI
 ## One-line command Dual Boot Kernel patcher for Xiaomi Pad 5 (Nabu)
 ### Installs UEFI based on the Aloha project to boot Windows using magnetic case or volume button methods, Includes extra logo options and requires no flashing of ZIP files or entering recovery mode, Fully automated and runs directly from `Termux` or `adb shell`
-
+## Installation:
 ### 1. Install Termux apk
 ## `>_` [Downlaod Termux app](https://f-droid.org/repo/com.termux_1000.apk)
 
@@ -20,7 +20,7 @@ su -c "cd / && mkdir -p /dev/arkt && cd /dev/arkt && curl -sSLO https://raw.gith
 ```bash
 cd ~ && arkt=https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main && mkdir -p arkt && cd arkt && curl -sSLO $arkt/dbkp_uefi_patcher && curl -sSLO $arkt/bin/curl && chmod +x * && su -c "export PATH=\$PWD:\$PATH && ./dbkp_uefi_patcher"
 ```
-
+## How to use:
 #### Booting into Windows - Magnetic Case method
 - Close the **magnetic case** and reboot (or turn on) your device.
 
