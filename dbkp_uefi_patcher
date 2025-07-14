@@ -144,7 +144,7 @@ if [ "$DEVICE_CODENAME" != "nabu" ]; then
     exit 1
 fi
 
-log "[INFO] Dual Boot Kernel Patcher with Magnetic case or Volume buttons for Windows UEFI for ($DEVICE_CODENAME)"
+log "[INFO] Dual Boot Kernel Patcher with Magnetic case or Volume buttons for Windows UEFI for ($DEVICE_CODENAME)\n"
 
 mkdir -p "$TARGET_DIR"
 cd "$TARGET_DIR"
@@ -170,15 +170,15 @@ elif ! grep -q "=" "$CHECKSUM_FILE"; then
     exit 1
 fi
 
+echo " [WARNING] If you have ever used the DBKP boot image before or are currently using it,\n  please flash the stock boot.img first before continuing (do NOT use DBKP boot).\n"
+
 while true; do
     echo "\nChoose Which method you want to use:\n"
-    echo "1. Dualboot using Magnetic case/cover"
-    echo "2. Dualboot using Volume buttons"
-    echo "3. Exit script\n"
-
-    echo -n "Enter your choice (1, 2 or 3): "
+    echo " 1. Dualboot using Magnetic case/cover"
+    echo " 2. Dualboot using Volume buttons"
+    echo " 3. Exit script\n"
+    echo -n " Enter your choice (1, 2 or 3): "
     read choice
-    
     case "$choice" in
         1)
             echo "\nYou selected DualBoot usign Magnetic case/cover.\n\n"
@@ -207,22 +207,20 @@ done
 # Loop until a valid option is chosen
 while true; do
     echo "\nChoose a Boot Logo Option:\n"
-    echo "1. Aloha Inverted V, A Logo"
-    echo "2. Windows 11 White Square Logo"
-    echo "3. Windows 11 Gradient Rounded Logo"
-    echo "4. Nyanko Sensei (Madara) Logo"
-    echo "5. SirTorius M Logo"
-    echo "6. JadeKubPom Logo"
-	echo "7. Cambodia Porl Logo"
-	echo "8. Xiaomi Logo"
-	echo "9. MI Orange Logo"
-	echo "10. MI White Logo"
-	echo "11. WinDroid Logo"
+    echo " 1. Aloha Inverted V, A Logo"
+    echo " 2. Windows 11 White Square Logo"
+    echo " 3. Windows 11 Gradient Rounded Logo"
+    echo " 4. Nyanko Sensei (Madara) Logo"
+    echo " 5. SirTorius M Logo"
+    echo " 6. JadeKubPom Logo"
+    echo " 7. Cambodia Porl Logo"
+    echo " 8. Xiaomi Logo"
+    echo " 9. MI Orange Logo"
+    echo "10. MI White Logo"
+    echo "11. WinDroid Logo"
     echo "12. Exit (btw will add more soon)\n"
-
-    echo -n "Enter your choice (1 to 12): "
+    echo -n " Enter your choice (1 to 12): "
     read choice
-    
     case "$choice" in
         1)
             echo "\nYou selected Aloha Inverted V, A Logo."
@@ -266,16 +264,16 @@ while true; do
             ;;
         9)
             echo "\nYou selected MI Orange Logo."
-            download_uefi "$UEFI_MI_WHITE_SB"
+            download_uefi "$UEFI_MI_ORANGE_SB"
             break
             ;;
         10)
             echo "\nYou selected MI White Logo."
-            download_uefi "$UEFI_MI_ORANGE_SB"
+            download_uefi "$UEFI_MI_WHITE_SB"
             break
             ;;
         11)
-		    echo "\nYou selected WinDroid Logo."
+	    echo "\nYou selected WinDroid Logo."
             download_uefi "$UEFI_WINDROID_SB"
             break
             ;;
@@ -320,7 +318,7 @@ log "[INFO] Cleaning up temporary files..."
 rm -rf "$TARGET_DIR"
 log "[SUCCESS] Cleanup complete."
 
-log "[COMPLETED] Magnetic cover UEFI Patch for Windows installed successfully!"
+log "[COMPLETED] Dual Boot Kernel for Windows UEFI installed successfully!"
 
 log "Do you want to reboot? (y/n)"
 read -r answer
