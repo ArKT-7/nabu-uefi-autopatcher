@@ -9,10 +9,10 @@
 BASE_URL="https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main"
 URL_BUSYBOX="$BASE_URL/bin/busybox"
 URL_MAGISK_BOOT="$BASE_URL/bin/magiskboot"
+URL_KP="$BASE_URL/bin/DualBootKernelPatcher"
 URL_DBKP_CFG="$BASE_URL/bin/aloha/DualBoot.Sm8150.cfg"
 URL_SHELLCODE="$BASE_URL/bin/aloha/ShellCode.Nabu.bin"
 URL_SHELLCODE2="$BASE_URL/bin/aloha/ShellCode.Nabu2.bin"
-URL_KP="$BASE_URL/bin/aloha/DualBootKernelPatcher"
 
 BASE_URL_MAGNETIC="$BASE_URL/bin/aloha/fd-files/magnetic"
 BASE_URL_VOLBUTTON="$BASE_URL/bin/aloha/fd-files/vol-button"
