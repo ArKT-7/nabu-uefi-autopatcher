@@ -27,6 +27,7 @@ UEFI_XIAOMI_SB="xiaomi_EFI_SB.fd"
 UEFI_MI_WHITE_SB="MI-White_EFI_SB.fd"
 UEFI_MI_ORANGE_SB="MI-Orange_EFI_SB.fd"
 UEFI_WINDROID_SB="WinDroid_EFI_SB.fd"
+UEFI_CHARA_SB="Chara-Dreemurr_EFI_SB.fd"
 
 TARGET_DIR="/dev/tmp/uefi-install"
 TARGET_BUSYBOX="$TARGET_DIR/busybox"
@@ -218,8 +219,9 @@ while true; do
     echo " 9. MI Orange Logo"
     echo "10. MI White Logo"
     echo "11. WinDroid Logo"
-    echo "12. Exit (btw will add more soon)\n"
-    echo -n " Enter your choice (1 to 12): "
+    echo "12. Chara Dreemurr Logo"
+    echo "13. Exit (btw will add more soon)\n"
+    echo -n " Enter your choice (1 to 13): "
     read choice
     case "$choice" in
         1)
@@ -273,11 +275,16 @@ while true; do
             break
             ;;
         11)
-	    echo "\nYou selected WinDroid Logo."
+            echo "\nYou selected WinDroid Logo."
             download_uefi "$UEFI_WINDROID_SB"
             break
             ;;
         12)
+            echo "\nYou selected Chara Dreemurr Logo."
+            download_uefi "$UEFI_CHARA_SB"
+            break
+            ;;
+        13)
             echo "Exiting."
             exit 0
             ;;
