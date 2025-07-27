@@ -31,6 +31,8 @@ $UEFI_MI_WHITE_SB = "MI-White_EFI_SB.fd"
 $UEFI_MI_ORANGE_SB = "MI-Orange_EFI_SB.fd"
 $UEFI_WINDROID_SB = "WinDroid_EFI_SB.fd"
 $UEFI_CHARA_SB = "Chara-Dreemurr_EFI_SB.fd"
+$UEFI_STORYSWAP_SB = "Storyswap-Chara_EFI_SB.fd"
+$UEFI_YUKARI_SB = "Yakumo-Yukari_EFI_SB.fd"
 
 $is64bit = [Environment]::Is64BitOperatingSystem
 if ($is64bit) {
@@ -434,8 +436,10 @@ while (-not $logo_ask) {
     print "10. MI White Logo"
     print "11. WinDroid Logo"
     print "12. Chara Dreemurr Logo"
-    print "13. Exit (btw will add more soon)`n"
-    $logo_choice = Prompt "Enter your choice (1 to 13): " Yellow
+    print "13. Storyswap Chara Logo"
+    print "14. Yakumo Yukari Logo"
+    print "15. Exit (btw will add more soon)`n"
+    $logo_choice = Prompt "Enter your choice (1 to 15): " Yellow
     switch ($logo_choice) {
         "1" {
             print "`nYou selected Aloha Inverted V, A Logo." Cyan
@@ -498,6 +502,16 @@ while (-not $logo_ask) {
             $logo_ask = $true
         }
         "13" {
+            print "`nYou selected Storyswap Chara Logo." Cyan
+            Download_UEFI $UEFI_STORYSWAP_SB
+            $logo_ask = $true
+        }
+        "14" {
+            print "`nYou selected Yakumo Yukari Logo." Cyan
+            Download_UEFI $UEFI_YUKARI_SB
+            $logo_ask = $true
+        }
+        "15" {
             print "Exiting." DarkCyan
             exit
         }

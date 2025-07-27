@@ -28,6 +28,8 @@ UEFI_MI_WHITE_SB="MI-White_EFI_SB.fd"
 UEFI_MI_ORANGE_SB="MI-Orange_EFI_SB.fd"
 UEFI_WINDROID_SB="WinDroid_EFI_SB.fd"
 UEFI_CHARA_SB="Chara-Dreemurr_EFI_SB.fd"
+UEFI_STORYSWAP_SB="Storyswap-Chara_EFI_SB.fd"
+UEFI_YUKARI_SB="Yakumo-Yukari_EFI_SB.fd"
 
 TARGET_DIR="/dev/tmp/uefi-install"
 TARGET_BUSYBOX="$TARGET_DIR/busybox"
@@ -220,8 +222,10 @@ while true; do
     echo "10. MI White Logo"
     echo "11. WinDroid Logo"
     echo "12. Chara Dreemurr Logo"
-    echo "13. Exit (btw will add more soon)\n"
-    echo -n " Enter your choice (1 to 13): "
+    echo "13. Storyswap Chara Logo"
+    echo "14. Yakumo Yukari Logo"
+    echo "15. Exit (btw will add more soon)\n"
+    echo -n " Enter your choice (1 to 15): "
     read choice
     case "$choice" in
         1)
@@ -285,6 +289,16 @@ while true; do
             break
             ;;
         13)
+            echo "\nYou selected Storyswap Chara Logo."
+            download_uefi "$UEFI_STORYSWAP_SB"
+            break
+            ;;
+        14)
+            echo "\nYou selected Yakumo Yukari Logo."
+            download_uefi "$UEFI_YUKARI_SB"
+            break
+            ;;
+        15)
             echo "Exiting."
             exit 0
             ;;
