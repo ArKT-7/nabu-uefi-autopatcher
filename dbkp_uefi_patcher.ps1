@@ -33,6 +33,7 @@ $UEFI_WINDROID_SB = "WinDroid_EFI_SB.fd"
 $UEFI_CHARA_SB = "Chara-Dreemurr_EFI_SB.fd"
 $UEFI_STORYSWAP_SB = "Storyswap-Chara_EFI_SB.fd"
 $UEFI_YUKARI_SB = "Yakumo-Yukari_EFI_SB.fd"
+$UEFI_RALSEI_SB = "Ralsei_EFI_SB.fd"
 
 $is64bit = [Environment]::Is64BitOperatingSystem
 if ($is64bit) {
@@ -438,8 +439,9 @@ while (-not $logo_ask) {
     print "12. Chara Dreemurr Logo"
     print "13. Storyswap Chara Logo"
     print "14. Yakumo Yukari Logo"
-    print "15. Exit (btw will add more soon)`n"
-    $logo_choice = Prompt "Enter your choice (1 to 15): " Yellow
+    print "15. Ralsei Logo"
+    print "16. Exit (btw will add more soon)`n"
+    $logo_choice = Prompt "Enter your choice (1 to 16): " Yellow
     switch ($logo_choice) {
         "1" {
             print "`nYou selected Aloha Inverted V, A Logo." Cyan
@@ -512,6 +514,11 @@ while (-not $logo_ask) {
             $logo_ask = $true
         }
         "15" {
+            print "`nYou selected Ralsei Logo." Cyan
+            Download_UEFI $UEFI_RALSEI_SB
+            $logo_ask = $true
+        }
+        "16" {
             print "Exiting." DarkCyan
             exit
         }

@@ -30,6 +30,7 @@ UEFI_WINDROID_SB="WinDroid_EFI_SB.fd"
 UEFI_CHARA_SB="Chara-Dreemurr_EFI_SB.fd"
 UEFI_STORYSWAP_SB="Storyswap-Chara_EFI_SB.fd"
 UEFI_YUKARI_SB="Yakumo-Yukari_EFI_SB.fd"
+UEFI_RALSEI_SB="Ralsei_EFI_SB.fd"
 
 TARGET_DIR="/dev/tmp/uefi-install"
 TARGET_BUSYBOX="$TARGET_DIR/busybox"
@@ -224,8 +225,9 @@ while true; do
     echo "12. Chara Dreemurr Logo"
     echo "13. Storyswap Chara Logo"
     echo "14. Yakumo Yukari Logo"
-    echo "15. Exit (btw will add more soon)\n"
-    echo -n " Enter your choice (1 to 15): "
+    echo "15. Ralsei Logo"
+    echo "16. Exit (btw will add more soon)\n"
+    echo -n " Enter your choice (1 to 16): "
     read choice
     case "$choice" in
         1)
@@ -299,6 +301,11 @@ while true; do
             break
             ;;
         15)
+            echo "\nYou selected Ralsei Logo."
+            download_uefi "$UEFI_RALSEI_SB"
+            break
+            ;;
+        16)
             echo "Exiting."
             exit 0
             ;;
