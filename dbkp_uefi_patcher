@@ -143,7 +143,20 @@ log "[INFO] Dual Boot Kernel Patcher for Windows UEFI for Xiaomi Pad 5 ($DEVICE_
 log "[INFO] This script is Written and Made By ArKT / °⊥⋊ɹ∀°, Telegram - '@ArKT_7', Github - 'ArKT-7'"
 
 # Check device compatibility
-if [ "$DEVICE_CODENAME" != "nabu" ]; then
+if [ "$DEVICE_CODENAME" = "nabu" ]; then
+    :
+elif [ "$DEVICE_CODENAME" = "OP5D77L1" ]; then
+    echo "\n[Warning] Detected device codename 'OP5D77L1'."
+    echo "\nMake sure you are actually running this on a Xiaomi Pad 5 (nabu)."
+    echo "If this is a different device, DO NOT PROCEED.\n"
+    echo -n  "Are you sure you are on a Xiaomi Pad 5? (y/n): "
+    read -r confirm
+    confirm=$(echo "$confirm" | tr '[:upper:]' '[:lower:]')
+    if [[ "$confirm" != "y" && "$confirm" != "yes" ]]; then
+        log "[ERROR] Unsupported device: $DEVICE_CODENAME"
+        exit 1
+    fi
+else
     log "[ERROR] Unsupported device: $DEVICE_CODENAME"
     exit 1
 fi
