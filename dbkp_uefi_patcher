@@ -352,7 +352,7 @@ log "Do you want to reboot? (y/n)"
 read -r answer
 if [ "$answer" = "y" ]; then
     log "Rebooting now..."
-    reboot
+    svc power reboot
 else
     log "Exiting..."
     exit 0
