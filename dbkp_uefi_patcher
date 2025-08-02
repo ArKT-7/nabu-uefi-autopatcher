@@ -343,6 +343,7 @@ $TARGET_BUSYBOX cp -f "$TARGET_DIR/new-boot.img" "/sdcard/patched_boot.img"
 log "[SUCCESS] Patched boot backup completed."
 
 log "[INFO] Cleaning up temporary files..."
+cd
 rm -rf "$TARGET_DIR"
 log "[SUCCESS] Cleanup complete."
 
