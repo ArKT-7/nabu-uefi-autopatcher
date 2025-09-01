@@ -34,6 +34,7 @@ $UEFI_CHARA_SB = "Chara-Dreemurr_EFI_SB.fd"
 $UEFI_STORYSWAP_SB = "Storyswap-Chara_EFI_SB.fd"
 $UEFI_YUKARI_SB = "Yakumo-Yukari_EFI_SB.fd"
 $UEFI_RALSEI_SB = "Ralsei_EFI_SB.fd"
+$UEFI_ROG_SB = "ROG_EFI_SB.fd"
 
 $is64bit = [Environment]::Is64BitOperatingSystem
 if ($is64bit) {
@@ -440,8 +441,9 @@ while (-not $logo_ask) {
     print "13. Storyswap Chara Logo"
     print "14. Yakumo Yukari Logo"
     print "15. Ralsei Logo"
-    print "16. Exit (btw will add more soon)`n"
-    $logo_choice = Prompt "Enter your choice (1 to 16): " Yellow
+    print "16. ROG Logo"
+    print "17. Exit (btw will add more soon)`n"
+    $logo_choice = Prompt "Enter your choice (1 to 17): " Yellow
     switch ($logo_choice) {
         "1" {
             print "`nYou selected Aloha Inverted V, A Logo." Cyan
@@ -519,6 +521,11 @@ while (-not $logo_ask) {
             $logo_ask = $true
         }
         "16" {
+            print "`nYou selected ROG Logo." Cyan
+            Download_UEFI $UEFI_ROG_SB
+            $logo_ask = $true
+        }
+        "17" {
             print "Exiting." DarkCyan
             exit
         }
