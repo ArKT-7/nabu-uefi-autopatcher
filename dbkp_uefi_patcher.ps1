@@ -19,22 +19,24 @@ $FD_FILE = Join-Path $binsDir "nabu.fd"
 $BASE_URL = "https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopatcher/main"
 $BASE_URL_MAGNETIC = "$BASE_URL/bin/aloha/fd-files/magnetic"
 $BASE_URL_VOLBUTTON = "$BASE_URL/bin/aloha/fd-files/vol-button"
-$UEFI_ALOHA_SB = "aloha_EFI_SB.fd"
-$UEFI_W11_WHITE_SB = "Win11-White_EFI_SB.fd"
-$UEFI_W11_GRADIENT_SB = "win11-gradient_EFI_SB.fd"
-$UEFI_NYANKO_SENSEI_SB = "Nyanko-Sensei_EFI_SB.fd"
-$UEFI_SIRTORIUS_M_SB = "SirTorius-M_EFI_SB.fd"
+$UEFI_ALOHA_SB = "Aloha_EFI_SB.fd"
+$UEFI_W11_WHITE_SB = "Win11_White_EFI_SB.fd"
+$UEFI_W11_GRADIENT_SB = "Win11_Gradient_EFI_SB.fd"
+$UEFI_NYANKO_SENSEI_SB = "Nyanko_Sensei_EFI_SB.fd"
+$UEFI_SIRTORIUS_M_SB = "SirTorius_M_EFI_SB.fd"
 $UEFI_JADEKUBPOM_SB = "JadeKubPom_EFI_SB.fd"
-$UEFI_CAMBODIA_PORL_SB = "Cambodia-porl_EFI_SB.fd"
-$UEFI_XIAOMI_SB = "xiaomi_EFI_SB.fd"
-$UEFI_MI_WHITE_SB = "MI-White_EFI_SB.fd"
-$UEFI_MI_ORANGE_SB = "MI-Orange_EFI_SB.fd"
+$UEFI_CAMBODIA_PORL_SB = "Cambodia_Porl_EFI_SB.fd"
+$UEFI_XIAOMI_SB = "Xiaomi_EFI_SB.fd"
+$UEFI_MI_WHITE_SB = "MI_White_EFI_SB.fd"
+$UEFI_MI_ORANGE_SB = "MI_Orange_EFI_SB.fd"
 $UEFI_WINDROID_SB = "WinDroid_EFI_SB.fd"
-$UEFI_CHARA_SB = "Chara-Dreemurr_EFI_SB.fd"
-$UEFI_STORYSWAP_SB = "Storyswap-Chara_EFI_SB.fd"
-$UEFI_YUKARI_SB = "Yakumo-Yukari_EFI_SB.fd"
+$UEFI_CHARA_SB = "Chara_Dreemurr_EFI_SB.fd"
+$UEFI_STORYSWAP_SB = "Storyswap_Chara_EFI_SB.fd"
+$UEFI_YUKARI_SB = "Yakumo_Yukari_EFI_SB.fd"
 $UEFI_RALSEI_SB = "Ralsei_EFI_SB.fd"
 $UEFI_ROG_SB = "ROG_EFI_SB.fd"
+$UEFI_IDK_SB = "idk_EFI_SB.fd"
+$UEFI_NEKO_SB = "Neko_EFI_SB.fd"
 
 $is64bit = [Environment]::Is64BitOperatingSystem
 if ($is64bit) {
@@ -442,8 +444,10 @@ while (-not $logo_ask) {
     print "14. Yakumo Yukari Logo"
     print "15. Ralsei Logo"
     print "16. ROG Logo"
-    print "17. Exit (btw will add more soon)`n"
-    $logo_choice = Prompt "Enter your choice (1 to 17): " Yellow
+    print "17. idk what Logo"
+    print "18. Neko Logo"
+    print "19. Exit (btw send ur logo to me)`n"
+    $logo_choice = Prompt "Enter your choice (1 to 19): " Yellow
     switch ($logo_choice) {
         "1" {
             print "`nYou selected Aloha Inverted V, A Logo." Cyan
@@ -526,6 +530,16 @@ while (-not $logo_ask) {
             $logo_ask = $true
         }
         "17" {
+            print "`nYou selected idk what Logo." Cyan
+            Download_UEFI $UEFI_IDK_SB
+            $logo_ask = $true
+        }
+        "18" {
+            print "`nYou selected Neko Logo." Cyan
+            Download_UEFI $UEFI_NEKO_SB
+            $logo_ask = $true
+        }
+        "19" {
             print "Exiting." DarkCyan
             exit
         }

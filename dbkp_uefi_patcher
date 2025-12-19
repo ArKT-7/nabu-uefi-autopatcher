@@ -16,22 +16,24 @@ URL_SHELLCODE2="$BASE_URL/bin/aloha/ShellCode.Nabu2.bin"
 
 BASE_URL_MAGNETIC="$BASE_URL/bin/aloha/fd-files/magnetic"
 BASE_URL_VOLBUTTON="$BASE_URL/bin/aloha/fd-files/vol-button"
-UEFI_ALOHA_SB="aloha_EFI_SB.fd"
-UEFI_W11_WHITE_SB="Win11-White_EFI_SB.fd"
-UEFI_W11_GRADIENT_SB="win11-gradient_EFI_SB.fd"
-UEFI_NYANKO_SENSEI_SB="Nyanko-Sensei_EFI_SB.fd"
-UEFI_SIRTORIUS_M_SB="SirTorius-M_EFI_SB.fd"
+UEFI_ALOHA_SB="Aloha_EFI_SB.fd"
+UEFI_W11_WHITE_SB="Win11_White_EFI_SB.fd"
+UEFI_W11_GRADIENT_SB="Win11_Gradient_EFI_SB.fd"
+UEFI_NYANKO_SENSEI_SB="Nyanko_Sensei_EFI_SB.fd"
+UEFI_SIRTORIUS_M_SB="SirTorius_M_EFI_SB.fd"
 UEFI_JADEKUBPOM_SB="JadeKubPom_EFI_SB.fd"
-UEFI_CAMBODIA_PORL_SB="Cambodia-porl_EFI_SB.fd"
-UEFI_XIAOMI_SB="xiaomi_EFI_SB.fd"
-UEFI_MI_WHITE_SB="MI-White_EFI_SB.fd"
-UEFI_MI_ORANGE_SB="MI-Orange_EFI_SB.fd"
+UEFI_CAMBODIA_PORL_SB="Cambodia_Porl_EFI_SB.fd"
+UEFI_XIAOMI_SB="Xiaomi_EFI_SB.fd"
+UEFI_MI_WHITE_SB="MI_White_EFI_SB.fd"
+UEFI_MI_ORANGE_SB="MI_Orange_EFI_SB.fd"
 UEFI_WINDROID_SB="WinDroid_EFI_SB.fd"
-UEFI_CHARA_SB="Chara-Dreemurr_EFI_SB.fd"
-UEFI_STORYSWAP_SB="Storyswap-Chara_EFI_SB.fd"
-UEFI_YUKARI_SB="Yakumo-Yukari_EFI_SB.fd"
+UEFI_CHARA_SB="Chara_Dreemurr_EFI_SB.fd"
+UEFI_STORYSWAP_SB="Storyswap_Chara_EFI_SB.fd"
+UEFI_YUKARI_SB="Yakumo_Yukari_EFI_SB.fd"
 UEFI_RALSEI_SB="Ralsei_EFI_SB.fd"
 UEFI_ROG_SB="ROG_EFI_SB.fd"
+UEFI_IDK_SB="idk_EFI_SB.fd"
+UEFI_NEKO_SB="Neko_EFI_SB.fd"
 
 TARGET_DIR="/dev/tmp/uefi-install"
 TARGET_BUSYBOX="$TARGET_DIR/busybox"
@@ -241,8 +243,10 @@ while true; do
     echo "14. Yakumo Yukari Logo"
     echo "15. Ralsei Logo"
     echo "16. ROG Logo"
-    echo "17. Exit (btw will add more soon)\n"
-    echo -n " Enter your choice (1 to 17): "
+    echo "17. idk what Logo"
+    echo "18. Neko Logo"
+    echo "19. Exit (btw Send ur logo to me)\n"
+    echo -n " Enter your choice (1 to 19): "
     read choice
     case "$choice" in
         1)
@@ -326,6 +330,16 @@ while true; do
             break
             ;;
         17)
+            echo "\nYou selected idk what Logo."
+            download_uefi "$UEFI_IDK_SB"
+            break
+            ;;
+        18)
+            echo "\nYou selected Neko Logo."
+            download_uefi "$UEFI_NEKO_SB"
+            break
+            ;;
+        19)
             echo "Exiting."
             exit 0
             ;;
