@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>UEFI - FD REPACKER by ArKT</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+        <style>
+            :root {
+                --bg-color: #050505;
+                --card-bg: #0a0a0a;
+                --text-color: #e0e0e0;
+                --text-dim: #888;
+                --accent-green: #2ecc71;
+                --accent-blue: #00e1ff;
+                --accent-red: #e74c3c;
+                --border-color: #333333;
+                --font-stack: 'JetBrains Mono', monospace;
+                --radius: 16px;
+                --system-accent-color: #2ecc71;
+                --cursor-ball-color: #f39c12;
+                --dim-color: rgba(46, 204, 113, 0.05);
+            }
+
+            [data-theme="light"] {
+                --bg-color: #f4f4f5;
+                --card-bg: #ffffff;
+                --text-color: #18181b;
+                --text-dim: #71717a;
+                --border-color: #e4e4e7;
+                --system-accent-color: #10b981;
+                --dim-color: rgba(16, 185, 129, 0.1);
+                --cursor-ball-color: #8b5cf6;
+            }
+
+            [data-theme="sunset"] {
+                --bg-color: #1a0b14;
+                --card-bg: #2d1b24;
+                --text-color: #fce7f3;
+                --text-dim: #be185d;
+                --border-color: #500724;
+                --system-accent-color: #f59e0b;
+                --dim-color: rgba(245, 158, 11, 0.1);
+                --cursor-ball-color: #06b6d4;
+            }
+
+            [data-theme="ocean"] {
+                --bg-color: #0f172a;
+                --card-bg: #1e293b;
+                --text-color: #e2e8f0;
+                --text-dim: #94a3b8;
+                --border-color: #334155;
+                --system-accent-color: #38bdf8;
+                --dim-color: rgba(56, 189, 248, 0.1);
+                --cursor-ball-color: #facc15;
+            }
+
+            [data-theme="forest"] {
+                --bg-color: #051a0d;
+                --card-bg: #0c2b16;
+                --text-color: #ecfdf5;
+                --text-dim: #34d399;
+                --border-color: #14532d;
+                --system-accent-color: #4ade80;
+                --dim-color: rgba(74, 222, 128, 0.1);
+                --cursor-ball-color: #ff00ff;
+            }
+
+            [data-theme="berry"] {
+                --bg-color: #2e0216;
+                --card-bg: #4a0424;
+                --text-color: #ffe4e6;
+                --text-dim: #fb7185;
+                --border-color: #831843;
+                --system-accent-color: #fb7185;
+                --dim-color: rgba(251, 113, 133, 0.1);
+                --cursor-ball-color: #a3e635;
+            }
+
+            [data-theme="royal"] {
+                --bg-color: #1e0b2e;
+                --card-bg: #2e1045;
+                --text-color: #f3e8ff;
+                --text-dim: #c084fc;
+                --border-color: #581c87;
+                --system-accent-color: #fbbf24;
+                --dim-color: rgba(251, 191, 36, 0.1);
+                --cursor-ball-color: #d8b4fe;
+            }
+
+            [data-theme="coffee"] {
+                --bg-color: #271c19;
+                --card-bg: #382823;
+                --text-color: #e6dace;
+                --text-dim: #a68b7c;
+                --border-color: #5d4037;
+                --system-accent-color: #d4a373;
+                --dim-color: rgba(212, 163, 115, 0.1);
+                --cursor-ball-color: #2dd4bf;
+            }
+
+            [data-theme="midnight"] {
+                --bg-color: #020617;
+                --card-bg: #0f172a;
+                --text-color: #e2e8f0;
+                --text-dim: #64748b;
+                --border-color: #1e293b;
+                --system-accent-color: #6366f1;
+                --dim-color: rgba(99, 102, 241, 0.1);
+                --cursor-ball-color: #39ff14;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                background-color: var(--bg-color);
+                color: var(--text-color);
+                font-family: var(--font-stack);
+                display: flex;
+                justify-content: center;
+                min-height: 100vh;
+                padding: 20px;
+                overflow-x: hidden;
+                transition: background-color 0.4s ease, color 0.4s ease;
+            }
+
+            #custom-cursor {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 21px;
+                height: 21px;
+                border: 2.39px solid var(--cursor-ball-color);
+                box-shadow: 0 0 5px var(--cursor-ball-color);
+                background-color: rgba(0, 0, 0, 0);
+                backdrop-filter: blur(1px);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 999999;
+                transform-origin: center center;
+                transition: border-color 0.2s, box-shadow 0.2s;
+                mix-blend-mode: normal;
+                will-change: transform;
+            }
+
+            @media (pointer: fine) {
+                * {
+                    cursor: none !important;
+                }
+
+                #custom-cursor {
+                    display: block;
+                }
+
+                body.hovering #custom-cursor {
+                    box-shadow: 0 0 10px var(--cursor-ball-color);
+                    background-color: var(--dim-color);
+                }
+            }
+
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                backdrop-filter: blur(5px);
+                z-index: 10000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s;
+            }
+
+            .overlay.active {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .modal-card {
+                background: var(--card-bg);
+                border: 1px solid var(--border-color);
+                padding: 40px;
+                border-radius: 24px;
+                width: 90%;
+                max-width: 500px;
+                text-align: center;
+                box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+                position: relative;
+            }
+
+            .palette-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                margin-top: 20px;
+            }
+
+            .palette-option {
+                height: 60px;
+                border-radius: 12px;
+                border: 2px solid transparent;
+                display: flex;
+                overflow: hidden;
+                position: relative;
+                cursor: pointer;
+                transition: transform 0.2s;
+            }
+
+            .palette-option:hover {
+                transform: scale(1.05);
+            }
+
+            .palette-option.active {
+                border-color: var(--text-color);
+                transform: scale(1.05);
+            }
+
+            .p-col {
+                flex: 1;
+                height: 100%;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 1000px;
+                padding-bottom: 50px;
+                position: relative;
+            }
+
+            header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+                margin-bottom: 2px;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 20px;
+                transition: border-color 0.3s ease;
+            }
+
+            .brand {
+                font-size: 2rem;
+                font-weight: bold;
+                letter-spacing: -2px;
+            }
+
+            .header-right {
+                text-align: right;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 10px;
+            }
+
+            .meta-info {
+                font-size: 0.75rem;
+                color: var(--text-dim);
+                text-align: right;
+                line-height: 1.4;
+            }
+
+            .toolbar-container {
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 10px;
+                margin-top: 0;
+                align-items: center;
+            }
+
+            .theme-btn {
+                background: transparent;
+                border: 1px solid var(--border-color);
+                color: var(--text-color);
+                font-family: var(--font-stack);
+                font-size: 0.7rem;
+                padding: 6px 12px;
+                cursor: pointer;
+                border-radius: 6px;
+                transition: all 0.2s ease;
+                font-weight: bold;
+            }
+
+            .theme-btn:hover {
+                border-color: var(--system-accent-color);
+                color: var(--system-accent-color);
+                box-shadow: 0 0 10px var(--dim-color);
+            }
+
+            .system-status {
+                margin-bottom: 30px;
+                position: relative;
+            }
+
+            .label {
+                font-size: 0.7rem;
+                color: var(--text-dim);
+                margin-bottom: 8px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                font-weight: bold;
+            }
+
+            .status-bar {
+                background-color: var(--card-bg);
+                border: 1px solid var(--border-color);
+                border-radius: var(--radius);
+                padding: 15px 20px;
+                font-size: 0.9rem;
+                color: var(--text-dim);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+                width: 100%;
+                z-index: 500;
+            }
+
+            .status-bar.error {
+                border-color: var(--accent-red);
+                color: var(--accent-red);
+                background: rgba(231, 76, 60, 0.05);
+                box-shadow: 0 0 15px rgba(231, 76, 60, 0.1);
+            }
+
+            .blink {
+                animation: blinker 1s step-end infinite;
+                color: var(--system-accent-color);
+            }
+
+            .status-bar.error .blink {
+                color: var(--accent-red);
+            }
+
+            @keyframes blinker {
+                50% {
+                    opacity: 0;
+                }
+            }
+
+            .card {
+                background-color: var(--card-bg);
+                border: 1px solid var(--border-color);
+                border-radius: var(--radius);
+                padding: 25px;
+                margin-bottom: 20px;
+                transition: all 0.3s ease;
+                position: relative;
+            }
+
+            .card:hover {
+                border-color: var(--system-accent-color);
+                background-color: var(--dim-color);
+                box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            }
+
+            .card-header-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 15px;
+                margin-bottom: 15px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .card-title {
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: var(--text-color);
+            }
+
+            .upload-area {
+                border: 2px dashed var(--border-color);
+                border-radius: var(--radius);
+                padding: 30px;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.3s;
+                position: relative;
+            }
+
+            .upload-area:hover {
+                border-color: var(--system-accent-color);
+                background: rgba(0, 225, 255, 0.05);
+            }
+
+            .upload-area.active {
+                border-color: var(--accent-green);
+                background: rgba(46, 204, 113, 0.1);
+            }
+
+            .upload-icon {
+                font-size: 2.5rem;
+                margin-bottom: 10px;
+                opacity: 0.5;
+            }
+
+            .sys-btn {
+                background: rgba(255,255,255,0.05);
+                border: 1px solid var(--border-color);
+                color: var(--text-color);
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-family: var(--font-stack);
+                font-size: 0.8rem;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.2s;
+                text-transform: uppercase;
+                white-space: nowrap;
+            }
+
+            .sys-btn:hover {
+                border-color: var(--system-accent-color);
+                color: var(--system-accent-color);
+                background: rgba(125,125,125,0.1);
+            }
+
+            .sys-btn.primary {
+                border-color: var(--system-accent-color);
+                color: var(--system-accent-color);
+            }
+
+            .sys-btn.primary:hover {
+                background: var(--system-accent-color);
+                color: #000;
+            }
+
+            .sys-btn.action {
+                background: rgba(46, 204, 113, 0.1);
+                border-color: var(--accent-green);
+                color: var(--accent-green);
+                width: 100%;
+            }
+
+            .sys-btn.action:hover {
+                background: var(--accent-green);
+                color: #000;
+            }
+
+            .hidden {
+                display: none !important;
+            }
+
+            #consoleLog {
+                margin-top: 15px;
+                height: 150px;
+                background: rgba(125, 125, 125, 0.05);
+                color: var(--text-dim);
+                border: 1px solid var(--border-color);
+                font-size: 0.7rem;
+                overflow-y: auto;
+                padding: 10px;
+                border-radius: 6px;
+                text-align: left;
+                font-family: var(--font-stack);
+            }
+
+            #consoleLog::-webkit-scrollbar {
+                width: 12px;
+            }
+
+            #consoleLog::-webkit-scrollbar-track {
+                background: transparent;
+                margin-block: 5px; }
+
+            #consoleLog::-webkit-scrollbar-thumb {
+                background-color: var(--border-color);
+                border-radius: 10px;
+                border: 4px solid transparent;
+                background-clip: content-box;
+            }
+
+            #consoleLog::-webkit-scrollbar-thumb:hover {
+                background-color: var(--system-accent-color);
+            }
+
+            .log-entry {
+                margin-bottom: 4px;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 2px;
+            }
+
+            .log-success {
+                color: var(--accent-green);
+            }
+
+            .log-error {
+                color: var(--accent-red);
+            }
+
+            .log-info {
+                color: var(--accent-blue);
+            }
+
+            .log-warn {
+                color: #f39c12;
+            }
+
+            .file-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+                margin-top: 20px;
+            }
+
+            .file-item {
+                background: rgba(255,255,255,0.03);
+                border: 1px solid var(--border-color);
+                padding: 15px;
+                border-radius: 8px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .file-name {
+                font-weight: bold;
+                color: var(--system-accent-color);
+                font-size: 0.9rem;
+            }
+
+            .file-size {
+                font-size: 0.75rem;
+                color: var(--text-dim);
+                font-family: monospace;
+            }
+
+            .repack-section {
+                border-top: 1px solid var(--border-color);
+                margin-top: 30px;
+                padding-top: 30px;
+                opacity: 0.5;
+                pointer-events: none;
+                transition: opacity 0.3s;
+            }
+
+            .repack-section.enabled {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            footer {
+                margin-top: 50px;
+                padding-top: 20px;
+                border-top: 1px solid var(--border-color);
+                font-size: 0.7rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .me-container {
+                display: inline-flex;
+                align-items: center;
+                min-height: 1rem;
+            }
+
+            .me-container::after {
+                content: '█';
+                margin-left: 5px;
+                animation: blink 1s infinite;
+                color: var(--system-accent-color);
+                font-size: 0.8rem;
+                line-height: 1;
+            }
+
+            a.social-link {
+                color: inherit;
+                text-decoration: none;
+                margin-left: 15px;
+                transition: color 0.3s;
+            }
+
+            a.social-link:hover {
+                color: var(--system-accent-color);
+            }
+        </style>
+    </head>
+    <body>
+        <div id="custom-cursor"></div>
+        <div id="theme-overlay" class="overlay">
+            <div class="modal-card">
+                <h2 class="brand">VISUAL STYLE</h2>
+                <div style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 20px;">SELECT INTERFACE THEME</div>
+                <div class="palette-grid" id="themeGrid"></div>
+                <button class="sys-btn" onclick="toggleOverlay('theme-overlay', false)" style="width: 100%; margin-top: 25px;">CLOSE</button>
+            </div>
+        </div>
+        <div class="container">
+            <header>
+                <div class="brand">UEFI - FD REPACKER.</div>
+                <div class="header-right">
+                    <div class="meta-info">
+                        SYS.ARKT: ONLINE<br>
+                        <span id="date-display">...</span>
+                    </div>
+                </div>
+            </header>
+            <div class="toolbar-container">
+                <div style="flex-grow: 1;"></div>
+                <button id="theme-toggle" class="theme-btn" onclick="toggleOverlay('theme-overlay', true)">[ CHANGE THEME ]</button>
+            </div>
+            <div class="system-status">
+                <div class="label">01. SYSTEM STATUS</div>
+                <div class="status-bar" id="statusBar">
+                    <span id="system-msg">> System Ready. Waiting for Boot Image...</span>
+                    <span class="blink">█</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header-row">
+                    <div class="card-title" style="border:none; padding:0; margin:0;">1. SOURCE IMAGE</div>
+                    <div class="badge dim">UEFI.IMG</div>
+                </div>
+                <div class="upload-area" id="dropZoneSrc" onclick="document.getElementById('fileInputSrc').click()">
+                    <div class="upload-icon">💿</div>
+                    <div style="font-weight: bold; margin-bottom: 5px;">LOAD ORIGINAL UEFI.IMG</div>
+                    <div style="font-size: 0.8rem; color: var(--text-dim);">Required to extract Shim & Ramdisk</div>
+                    <input type="file" id="fileInputSrc" style="display: none;" accept=".img,.bin">
+                </div>
+            </div>
+            <div class="card hidden" id="consoleCard">
+                <div class="card-header-row">
+                    <div class="card-title" style="font-size: 1rem;">SYSTEM LOG</div>
+                </div>
+                <div id="consoleLog"></div>
+            </div>
+            <div class="card hidden" id="extractCard">
+                <div class="card-header-row">
+                    <div class="card-title" style="border:none; padding:0; margin:0;">EXTRACTED COMPONENTS</div>
+                    <div style="color: var(--accent-green);">AVAILABLE</div>
+                </div>
+                <div class="file-grid">
+                    <div class="file-item">
+                        <div class="file-name">bootshim.bin</div>
+                        <div class="file-size" id="shimSize">---</div>
+                        <button class="sys-btn primary" id="btnDlShim">DOWNLOAD</button>
+                    </div>
+                    <div class="file-item">
+                        <div class="file-name">extracted.fd</div>
+                        <div class="file-size" id="fdSize">---</div>
+                        <button class="sys-btn primary" id="btnDlFd">DOWNLOAD</button>
+                    </div>
+                </div>
+                <button class="sys-btn" id="btnDlRamdisk" style="width: 100%; margin-top: 15px;">DOWNLOAD RAMDISK.CPIO</button>
+            </div>
+            <div class="repack-section" id="repackSection">
+                <div class="card" style="border-color: var(--accent-green);">
+                    <div class="card-header-row">
+                        <div class="card-title" style="color:var(--accent-green);">2. REPACK NEW IMAGE</div>
+                        <div style="font-size: 0.8rem;">READY TO FORGE</div>
+                    </div>
+                    <div style="margin-bottom: 20px; font-size: 0.9rem; color: var(--text-dim);">
+                        Drop your modified <b>.FD</b>
+                        file here. Tool will combine it with the original Shim, re-compress it (Gzip), attach the original DTB, and build a new bootable image.
+                
+                    </div>
+                    <div class="upload-area" id="dropZoneRepack" onclick="document.getElementById('fileInputRepack').click()">
+                        <div class="upload-icon" style="color: var(--accent-green);">♻️</div>
+                        <div style="font-weight: bold; margin-bottom: 5px;">UPLOAD NEW .FD FILE</div>
+                        <input type="file" id="fileInputRepack" style="display: none;" accept=".fd,.bin">
+                    </div>
+                    <div id="repackResult" class="hidden" style="margin-top: 20px; text-align: center;">
+                        <button class="sys-btn action" id="btnDlNewImg">DOWNLOAD NEW-UEFI.IMG</button>
+                    </div>
+                </div>
+            </div>
+            <footer>
+                <div class="me-section">
+                    <span class="me-label">SYS.ME ::</span>
+                    <span id="me-display" class="me-container"></span>
+                </div>
+                <div>
+                    <a href="https://github.com/ArKT-7/nabu-uefi-autopatcher" class="social-link">GITHUB</a>
+                </div>
+            </footer>
+        </div>
+        <script>
+            const LZ4 = {
+                decompress: function(src) {
+                    const magic = src[0] | (src[1] << 8) | (src[2] << 16) | (src[3] << 24);
+                    if (magic === 0x184C2102)
+                        return this.decompressLegacy(src, 4);
+                    else if (magic === 0x184D2204)
+                        throw new Error("Modern LZ4 unsupported.");
+                    else
+                        throw new Error("Invalid LZ4 Magic");
+                },
+                decompressLegacy: function(src, ptr) {
+                    let chunks = []
+                      , tot = 0;
+                    while (ptr < src.length) {
+                        if (ptr + 4 > src.length)
+                            break;
+                        const sz = src[ptr] | (src[ptr + 1] << 8) | (src[ptr + 2] << 16) | (src[ptr + 3] << 24);
+                        ptr += 4;
+                        if (sz === 0)
+                            break;
+                        if (ptr + sz > src.length)
+                            throw new Error("Truncated Block");
+                        const chk = new Uint8Array(sz * 255);
+                        let cPtr = 0
+                          , end = ptr + sz;
+                        while (ptr < end) {
+                            const t = src[ptr++];
+                            let l = t >> 4;
+                            if (l === 15) {
+                                let s;
+                                do {
+                                    s = src[ptr++];
+                                    l += s
+                                } while (s === 255)
+                            }
+                            for (let i = 0; i < l; i++)
+                                chk[cPtr++] = src[ptr++];
+                            if (ptr >= end)
+                                break;
+                            const off = src[ptr] | (src[ptr + 1] << 8);
+                            ptr += 2;
+                            let m = t & 0xF;
+                            if (m === 15) {
+                                let s;
+                                do {
+                                    s = src[ptr++];
+                                    m += s
+                                } while (s === 255)
+                            }
+                            m += 4;
+                            let mPtr = cPtr - off;
+                            for (let i = 0; i < m; i++)
+                                chk[cPtr++] = chk[mPtr++];
+                        }
+                        const act = chk.slice(0, cPtr);
+                        chunks.push(act);
+                        tot += act.length;
+                    }
+                    const res = new Uint8Array(tot);
+                    let p = 0;
+                    for (let c of chunks) {
+                        res.set(c, p);
+                        p += c.length
+                    }
+                    return res;
+                }
+            };
+
+            const STATE = {
+                shim: null,
+                ramdisk: null,
+                appendedDtb: null,
+                header: null,
+                headerInfo: {},
+                second: null,
+                recDtbo: null,
+                dtb: null
+            };
+
+            const log = (msg, type='info') => {
+                const div = document.createElement('div');
+                div.className = `log-entry log-${type}`;
+                div.textContent = `> ${msg}`;
+                const cl = document.getElementById('consoleLog');
+                cl.appendChild(div);
+                cl.scrollTop = cl.scrollHeight;
+            }
+            ;
+
+            function setSystemMsg(msg, isError=false) {
+                const el = document.getElementById('system-msg');
+                const bar = document.getElementById('statusBar');
+                el.textContent = "> " + msg;
+                if (isError) {
+                    bar.classList.add('error');
+                    setTimeout( () => bar.classList.remove('error'), 3000);
+                } else {
+                    bar.classList.remove('error');
+                }
+            }
+
+            const formatSize = (b) => {
+                if (b === 0)
+                    return '0 B';
+                const k = 1024
+                  , s = ['B', 'KB', 'MB', 'GB']
+                  , i = Math.floor(Math.log(b) / Math.log(k));
+                return parseFloat((b / Math.pow(k, i)).toFixed(2)) + ' ' + s[i];
+            }
+            ;
+
+            const setupDl = (id, data, name) => {
+                const b = document.getElementById(id);
+                const url = URL.createObjectURL(new Blob([data],{
+                    type: "application/octet-stream"
+                }));
+                b.onclick = () => {
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = name;
+                    a.click();
+                }
+                ;
+            }
+            ;
+            async function processSource(file) {
+                document.getElementById('consoleCard').classList.remove('hidden');
+                document.getElementById('extractCard').classList.add('hidden');
+                document.getElementById('repackSection').classList.remove('enabled');
+                document.getElementById('consoleLog').innerHTML = '';
+
+                log(`Loading: ${file.name}`, 'info');
+                setSystemMsg("Analyzing Header...");
+
+                try {
+                    const buffer = await file.arrayBuffer();
+                    const view = new DataView(buffer);
+                    const enc = new TextDecoder();
+
+                    if (enc.decode(new Uint8Array(buffer,0,8)) !== "ANDROID!")
+                        throw new Error("Invalid Magic");
+                    log("Header: Valid Android", 'success');
+
+                    const kSz = view.getUint32(8, true);
+                    const rSz = view.getUint32(16, true);
+                    const sSz = view.getUint32(24, true);
+                    let pgSz = view.getUint32(36, true);
+                    let ver = view.getUint32(44, true);
+
+                    if (ver > 99) {
+                        const v3 = view.getUint32(40, true);
+                        if (v3 >= 3 && v3 <= 4) {
+                            ver = v3;
+                            pgSz = 4096;
+                        } else {
+                            ver = 0;
+                            if (pgSz > 65536)
+                                pgSz = 2048;
+                        }
+                    }
+
+                    let recDtboSz = 0
+                      , dtbSz = 0;
+                    if (ver >= 1)
+                        recDtboSz = view.getUint32(1632, true);
+                    const possibleDtbSz = view.getUint32(1648, true);
+                    if (ver >= 2 || (possibleDtbSz > 0 && possibleDtbSz < buffer.byteLength / 2)) {
+                        dtbSz = possibleDtbSz;
+                    }
+
+                    STATE.headerInfo = {
+                        kSz,
+                        rSz,
+                        sSz,
+                        pgSz,
+                        ver,
+                        recDtboSz,
+                        dtbSz
+                    };
+                    log(`Kernel:${formatSize(kSz)} | Ramdisk:${formatSize(rSz)} | DTB:${formatSize(dtbSz)}`, 'info');
+
+                    const hdrSz = (ver >= 3) ? 4096 : pgSz;
+                    STATE.header = new Uint8Array(buffer.slice(0, hdrSz));
+                    const getPad = (s) => (s + pgSz - 1) & ~(pgSz - 1);
+
+                    let off = hdrSz;
+                    let kBlob = new Uint8Array(buffer.slice(off, off + kSz));
+                    off += getPad(kSz);
+                    STATE.ramdisk = new Uint8Array(buffer.slice(off, off + rSz));
+                    off += getPad(rSz);
+                    STATE.second = (sSz > 0) ? new Uint8Array(buffer.slice(off, off + sSz)) : null;
+                    if (sSz > 0)
+                        off += getPad(sSz);
+                    STATE.recDtbo = (recDtboSz > 0) ? new Uint8Array(buffer.slice(off, off + recDtboSz)) : null;
+                    if (recDtboSz > 0)
+                        off += getPad(recDtboSz);
+                    STATE.dtb = (dtbSz > 0) ? new Uint8Array(buffer.slice(off, off + dtbSz)) : null;
+                    if (dtbSz > 0)
+                        log(`Saved Header V2 DTB (${formatSize(dtbSz)})`, 'warn');
+
+                    STATE.appendedDtb = null;
+                    for (let i = 0; i < kBlob.length - 4; i++) {
+                        if (kBlob[i] === 0xD0 && kBlob[i + 1] === 0x0D && kBlob[i + 2] === 0xFE && kBlob[i + 3] === 0xED) {
+                            log(`Found Appended DTB inside Kernel (+${i}). Saving...`, 'warn');
+                            STATE.appendedDtb = kBlob.slice(i);
+                            kBlob = kBlob.slice(0, i);
+                            break;
+                        }
+                    }
+
+                    let rawK;
+                    if (kBlob[0] === 0x1F && kBlob[1] === 0x8B) {
+                        log("Decompressing Gzip...", 'info');
+                        const ds = new DecompressionStream('gzip');
+                        const s = new Blob([kBlob]).stream().pipeThrough(ds);
+                        rawK = new Uint8Array(await new Response(s).arrayBuffer());
+                    } else if (kBlob[0] === 0x02 && kBlob[1] === 0x21) {
+                        log("Decompressing LZ4...", 'info');
+                        rawK = LZ4.decompress(kBlob);
+                    } else {
+                        rawK = kBlob;
+                    }
+                    let sig = -1;
+                    for (let i = 0; i < rawK.length - 4; i++) {
+                        if (rawK[i] === 0x5F && rawK[i + 1] === 0x46 && rawK[i + 2] === 0x56 && rawK[i + 3] === 0x48) {
+                            sig = i;
+                            break;
+                        }
+                    }
+                    if (sig === -1)
+                        throw new Error("No UEFI Signature found");
+
+                    const split = sig - 40;
+                    const shim = rawK.slice(0, split);
+                    const fd = rawK.slice(split);
+                    STATE.shim = shim;
+
+                    log(`Shim: ${formatSize(shim.length)} | FD: ${formatSize(fd.length)}`, 'success');
+                    setSystemMsg("Extraction Complete.");
+
+                    setupDl('btnDlShim', shim, 'bootshim.bin');
+                    setupDl('btnDlFd', fd, 'extracted.fd');
+                    setupDl('btnDlRamdisk', STATE.ramdisk, 'ramdisk.cpio');
+                    document.getElementById('shimSize').textContent = formatSize(shim.length);
+                    document.getElementById('fdSize').textContent = formatSize(fd.length);
+                    document.getElementById('extractCard').classList.remove('hidden');
+                    document.getElementById('repackSection').classList.add('enabled');
+                } catch (e) {
+                    log(e.message, 'error');
+                    setSystemMsg("Error: " + e.message, true);
+                }
+            }
+
+            async function processRepack(file) {
+                log(`Repacking with: ${file.name}`, 'info');
+                setSystemMsg("Forging new image...");
+                document.getElementById('repackResult').classList.add('hidden');
+
+                try {
+                    const newFd = new Uint8Array(await file.arrayBuffer());
+                    log(`New FD Size: ${formatSize(newFd.length)}`, 'info');
+
+                    const merged = new Uint8Array(STATE.shim.length + newFd.length);
+                    merged.set(STATE.shim, 0);
+                    merged.set(newFd, STATE.shim.length);
+
+                    log("Compressing Kernel...", 'info');
+                    const cs = new CompressionStream('gzip');
+                    const writer = cs.writable.getWriter();
+                    writer.write(merged);
+                    writer.close();
+                    const newCompKernel = new Uint8Array(await new Response(cs.readable).arrayBuffer());
+                    log(`Compressed Kernel: ${formatSize(newCompKernel.length)}`, 'success');
+
+                    let finalKernel = newCompKernel;
+                    if (STATE.appendedDtb) {
+                        log("Re-attaching Appended DTB...", 'warn');
+                        finalKernel = new Uint8Array(newCompKernel.length + STATE.appendedDtb.length);
+                        finalKernel.set(newCompKernel, 0);
+                        finalKernel.set(STATE.appendedDtb, newCompKernel.length);
+                    }
+
+                    const pgSz = STATE.headerInfo.pgSz;
+                    const getPadSz = (sz) => ((sz + pgSz - 1) & ~(pgSz - 1)) - sz;
+                    const parts = [];
+                    parts.push(finalKernel);
+                    parts.push(new Uint8Array(getPadSz(finalKernel.length)));
+                    parts.push(STATE.ramdisk);
+                    parts.push(new Uint8Array(getPadSz(STATE.ramdisk.length)));
+                    if (STATE.second) {
+                        parts.push(STATE.second);
+                        parts.push(new Uint8Array(getPadSz(STATE.second.length)));
+                    }
+                    if (STATE.recDtbo) {
+                        parts.push(STATE.recDtbo);
+                        parts.push(new Uint8Array(getPadSz(STATE.recDtbo.length)));
+                    }
+                    if (STATE.dtb) {
+                        log(`Appending Header V2 DTB (${formatSize(STATE.dtb.length)})...`, 'warn');
+                        parts.push(STATE.dtb);
+                        parts.push(new Uint8Array(getPadSz(STATE.dtb.length)));
+                    }
+
+                    const bodyBlob = new Blob(parts);
+                    const bodyBuffer = new Uint8Array(await bodyBlob.arrayBuffer());
+
+                    const newHeader = new Uint8Array(STATE.header);
+                    const view = new DataView(newHeader.buffer);
+                    view.setUint32(8, finalKernel.length, true);
+
+                    log("Recalculating SHA-1 Checksum...", 'info');
+                    const hashBuffer = await crypto.subtle.digest('SHA-1', bodyBuffer);
+                    const hashArray = new Uint8Array(hashBuffer);
+                    newHeader.set(hashArray, 576);
+                    const finalBlob = new Blob([newHeader, new Uint8Array(getPadSz(STATE.header.length)), bodyBlob],{
+                        type: "application/octet-stream"
+                    });
+                    log(`Boot Image Forged: ${formatSize(finalBlob.size)}`, 'success');
+                    setSystemMsg("Forge Successful. Ready to Download.");
+
+                    const url = URL.createObjectURL(finalBlob);
+                    const btn = document.getElementById('btnDlNewImg');
+                    btn.onclick = () => {
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = "new-uefi.img";
+                        a.click();
+                    }
+                    ;
+                    document.getElementById('repackResult').classList.remove('hidden');
+
+                } catch (e) {
+                    log(e.message, 'error');
+                    setSystemMsg("Forge Failed.", true);
+                }
+            }
+
+            const THEMES = [{
+                id: 'dark',
+                name: 'Cyber Dark',
+                colors: ['#050505', '#2ecc71']
+            }, {
+                id: 'light',
+                name: 'Clean Light',
+                colors: ['#ffffff', '#10b981']
+            }, {
+                id: 'sunset',
+                name: 'Sunset Vibe',
+                colors: ['#2d1b24', '#f59e0b']
+            }, {
+                id: 'ocean',
+                name: 'Deep Ocean',
+                colors: ['#0f172a', '#38bdf8']
+            }, {
+                id: 'forest',
+                name: 'Neon Forest',
+                colors: ['#051a0d', '#4ade80']
+            }, {
+                id: 'berry',
+                name: 'Wild Berry',
+                colors: ['#4a0424', '#fb7185']
+            }, {
+                id: 'royal',
+                name: 'Royal Gold',
+                colors: ['#1e0b2e', '#fbbf24']
+            }, {
+                id: 'coffee',
+                name: 'Dark Roast',
+                colors: ['#271c19', '#d4a373']
+            }, {
+                id: 'midnight',
+                name: 'Midnight',
+                colors: ['#020617', '#6366f1']
+            }];
+
+            function applyTheme(themeId) {
+                document.documentElement.setAttribute('data-theme', themeId);
+                localStorage.setItem('peek_theme', themeId);
+                const options = document.querySelectorAll('.palette-option');
+                options.forEach(el => el.classList.toggle('active', el.dataset.theme === themeId));
+                const btn = document.getElementById('theme-toggle');
+                const current = THEMES.find(t => t.id === themeId);
+                if (btn && current)
+                    btn.textContent = `[THEME: ${current.name.toUpperCase()}]`;
+            }
+
+            function generateThemeGrid() {
+                const grid = document.getElementById('themeGrid');
+                grid.innerHTML = '';
+                THEMES.forEach(t => {
+                    const div = document.createElement('div');
+                    div.className = 'palette-option';
+                    div.dataset.theme = t.id;
+                    div.onclick = () => applyTheme(t.id);
+                    div.innerHTML = `<div class="p-col" style="background:${t.colors[0]}"></div><div class="p-col" style="background:${t.colors[1]}"></div><div style="position:absolute; bottom:5px; left:0; width:100%; text-align:center; font-size:0.6rem; color:#fff; text-shadow:0 1px 2px #000; font-weight:bold;">${t.name.toUpperCase()}</div>`;
+                    grid.appendChild(div);
+                }
+                );
+            }
+
+            function toggleOverlay(id, show) {
+                const el = document.getElementById(id);
+                if (show)
+                    el.classList.add('active');
+                else
+                    el.classList.remove('active');
+            }
+
+            const cursor = document.getElementById('custom-cursor');
+            let mouseX = 0
+              , mouseY = 0
+              , cursorX = 0
+              , cursorY = 0;
+            const speed = 0.16;
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            }
+            );
+            document.body.addEventListener('mouseover', (e) => {
+                if (e.target.closest('button, .card, input, .upload-area, .file-item, .palette-option')) {
+                    document.body.classList.add('hovering');
+                } else {
+                    document.body.classList.remove('hovering');
+                }
+            }
+            );
+            function animateCursor() {
+                cursorX += (mouseX - cursorX) * speed;
+                cursorY += (mouseY - cursorY) * speed;
+                const dist = Math.sqrt(Math.pow(mouseX - cursorX, 2) + Math.pow(mouseY - cursorY, 2));
+                const scale = Math.min(dist / 100, 0.4);
+                const angle = Math.atan2(mouseY - cursorY, mouseX - cursorX) * 180 / Math.PI;
+                cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%) rotate(${angle}deg) scale(${1 + scale}, ${1 - scale * 0.5})`;
+                requestAnimationFrame(animateCursor);
+            }
+            animateCursor();
+
+            const Me = ['UEFI - FD repacker By ArKT', 'Web Version v1.7', 'ArKT-7', 'ArKT_7'];
+            const MeContainer = document.getElementById('me-display');
+            async function typeWriterLoop() {
+                while (true) {
+                    for (let name of Me) {
+                        MeContainer.textContent = "";
+                        for (let char of name) {
+                            MeContainer.textContent += char;
+                            await new Promise(r => setTimeout(r, 50));
+                        }
+                        await new Promise(r => setTimeout(r, 3000));
+                    }
+                }
+            }
+            typeWriterLoop();
+
+            window.addEventListener('DOMContentLoaded', () => {
+                generateThemeGrid();
+                applyTheme(localStorage.getItem('peek_theme') || 'dark');
+                const now = new Date();
+                document.getElementById('date-display').textContent = now.toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }).toUpperCase();
+            }
+            );
+
+            document.getElementById('fileInputSrc').onchange = (e) => {
+                if (e.target.files[0])
+                    processSource(e.target.files[0]);
+            }
+            ;
+            document.getElementById('fileInputRepack').onchange = (e) => {
+                if (e.target.files[0])
+                    processRepack(e.target.files[0]);
+            }
+            ;
+
+            const dzSrc = document.getElementById('dropZoneSrc');
+            dzSrc.ondragover = (e) => {
+                e.preventDefault();
+                dzSrc.classList.add('active');
+            }
+            ;
+            dzSrc.ondragleave = () => dzSrc.classList.remove('active');
+            dzSrc.ondrop = (e) => {
+                e.preventDefault();
+                dzSrc.classList.remove('active');
+                if (e.dataTransfer.files[0])
+                    processSource(e.dataTransfer.files[0]);
+            }
+            ;
+
+            const dzRepack = document.getElementById('dropZoneRepack');
+            dzRepack.ondragover = (e) => {
+                e.preventDefault();
+                dzRepack.classList.add('active');
+            }
+            ;
+            dzRepack.ondragleave = () => dzRepack.classList.remove('active');
+            dzRepack.ondrop = (e) => {
+                e.preventDefault();
+                dzRepack.classList.remove('active');
+                if (e.dataTransfer.files[0])
+                    processRepack(e.dataTransfer.files[0]);
+            }
+            ;
+        </script>
+    </body>
+</html>
