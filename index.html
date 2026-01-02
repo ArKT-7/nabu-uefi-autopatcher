@@ -140,7 +140,7 @@
                 border: 2.39px solid var(--cursor-ball-color);
                 box-shadow: 0 0 5px var(--cursor-ball-color);
                 background-color: rgba(0, 0, 0, 0);
-                backdrop-filter: blur(1px);
+                /* backdrop-filter: blur(1px); */
                 border-radius: 50%;
                 pointer-events: none;
                 z-index: 999999;
@@ -151,15 +151,16 @@
             }
 
             @media (pointer: fine) {
-                * {
+                body.custom-cursor-active,
+                body.custom-cursor-active * {
                     cursor: none !important;
                 }
 
-                #custom-cursor {
+                body.custom-cursor-active #custom-cursor {
                     display: block;
                 }
 
-                body.hovering #custom-cursor {
+                body.custom-cursor-active.hovering #custom-cursor {
                     box-shadow: 0 0 10px var(--cursor-ball-color);
                     background-color: var(--dim-color);
                 }
@@ -171,8 +172,8 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0,0,0,0.8);
-                backdrop-filter: blur(5px);
+                background: rgba(0,0,0,0.9);
+                /* backdrop-filter: blur(5px); */
                 z-index: 10000;
                 display: flex;
                 justify-content: center;
@@ -587,6 +588,26 @@
             a.social-link:hover {
                 color: var(--system-accent-color);
             }
+
+            .toggle-row {
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid var(--border-color);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                color: var(--text-dim);
+                font-size: 0.8rem;
+                font-weight: bold;
+            }
+
+            input[type="checkbox"] {
+                accent-color: var(--system-accent-color);
+                width: 16px;
+                height: 16px;
+                cursor: pointer;
+            }
         </style>
     </head>
     <body>
@@ -596,6 +617,10 @@
                 <h2 class="brand">VISUAL STYLE</h2>
                 <div style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 20px;">SELECT INTERFACE THEME</div>
                 <div class="palette-grid" id="themeGrid"></div>
+                <div class="toggle-row">
+                    <input type="checkbox" id="cursorToggle" onchange="toggleCursorPhysics(this.checked)">
+                    <label for="cursorToggle">ENABLE CUSTOM PHY. CURSOR</label>
+                </div>
                 <button class="sys-btn" onclick="toggleOverlay('theme-overlay', false)" style="width: 100%; margin-top: 25px;">CLOSE</button>
             </div>
         </div>
@@ -1075,6 +1100,23 @@
                     btn.textContent = `[THEME: ${current.name.toUpperCase()}]`;
             }
 
+            function toggleCursorPhysics(isEnabled) {
+                const body = document.body;
+                const checkbox = document.getElementById('cursorToggle');
+
+                if (isEnabled) {
+                    body.classList.add('custom-cursor-active');
+                    localStorage.setItem('cursor_physics', 'enabled');
+                    if (checkbox)
+                        checkbox.checked = true;
+                } else {
+                    body.classList.remove('custom-cursor-active');
+                    localStorage.setItem('cursor_physics', 'disabled');
+                    if (checkbox)
+                        checkbox.checked = false;
+                }
+            }
+
             function generateThemeGrid() {
                 const grid = document.getElementById('themeGrid');
                 grid.innerHTML = '';
@@ -1102,7 +1144,7 @@
               , mouseY = 0
               , cursorX = 0
               , cursorY = 0;
-            const speed = 0.16;
+            const speed = 0.5;
             window.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX;
                 mouseY = e.clientY;
@@ -1120,7 +1162,7 @@
                 cursorX += (mouseX - cursorX) * speed;
                 cursorY += (mouseY - cursorY) * speed;
                 const dist = Math.sqrt(Math.pow(mouseX - cursorX, 2) + Math.pow(mouseY - cursorY, 2));
-                const scale = Math.min(dist / 100, 0.4);
+                const scale = Math.min(dist / 15, 0.5);
                 const angle = Math.atan2(mouseY - cursorY, mouseX - cursorX) * 180 / Math.PI;
                 cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%) rotate(${angle}deg) scale(${1 + scale}, ${1 - scale * 0.5})`;
                 requestAnimationFrame(animateCursor);
@@ -1146,6 +1188,9 @@
             window.addEventListener('DOMContentLoaded', () => {
                 generateThemeGrid();
                 applyTheme(localStorage.getItem('peek_theme') || 'dark');
+                const savedCursor = localStorage.getItem('cursor_physics');
+                const shouldEnable = savedCursor === 'enabled' || savedCursor === null;
+                toggleCursorPhysics(shouldEnable);
                 const now = new Date();
                 document.getElementById('date-display').textContent = now.toLocaleDateString('en-US', {
                     weekday: 'short',

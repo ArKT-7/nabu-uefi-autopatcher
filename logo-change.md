@@ -56,7 +56,11 @@ Now that you have the `extracted.fd` file, let's change the picture.
 10. **Right-click** on the "Raw section".
 11. Choose **Replace body...**
 12. Change the file filter to **"All Files"** and select your new **Logo (`.bmp`)** file.
-    * *Note: Ensure your BMP is the correct resolution for your device.*
+
+> [!IMPORTANT]
+> * **Resolution:** Do **NOT** use your device's full screen resolution (e.g., 1080x2400), Only size the image for the actual **logo area** (e.g., `400px` to `600px` width).
+> * **File Size:** The BMP file **MUST be under 800KB**.
+
 13. **Save the file:**
     * Click **File** > **Save image file...**
     * Save it as `new.fd`.
