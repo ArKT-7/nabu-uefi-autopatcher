@@ -84,12 +84,18 @@ download_uefi() {
         log "[INFO] Proceeding with Magnetic case Dualboot method!"
         PRIMARY_URL="$BASE_URL_MAGNETIC/$1"
         FILE_KEY="MAG_$1"
-    else
+    elif [ "$DBKP_METHOD" -eq 1 ]; then
         log "[INFO] Proceeding with Volume Button Dualboot method!"
         rm -f "$TARGET_SHELLCODE"
         mv "$TARGET_SHELLCODE2" "$TARGET_SHELLCODE"
         PRIMARY_URL="$BASE_URL_VOLBUTTON/$1"
         FILE_KEY="VOL_$1"
+    elif [ "$DBKP_METHOD" -eq 2 ]; then
+        log "[INFO] Proceeding with Multiboot rEFInd bootmenu loader!"
+        rm -f "$TARGET_SHELLCODE"
+        mv "$TARGET_SHELLCODE2" "$TARGET_SHELLCODE"
+        PRIMARY_URL="$BASE_URL_MAGNETIC/$1"
+        FILE_KEY="MAG_$1"
     fi
 
     FALLBACK_URL="$PRIMARY_URL"
@@ -177,7 +183,7 @@ echo "\n\n[WARNING] If you are currently using (or have previously used) a DBKP 
 while true; do
     echo "\nSelect Secure Boot Mode:\n"
     echo " 1. Secure Boot (Default, Recommended)"
-    echo " 2. No Secure Boot (Only if you know what you are doing)"
+    echo " 2. No Secure Boot (Only if you know what you are doing)\n"
     echo -n " Enter your choice (1 or 2): "
     read sb_choice
     case "$sb_choice" in
@@ -221,14 +227,20 @@ while true; do
     echo "\nChoose Which method you want to use:\n"
     echo " 1. Dualboot using Magnetic case/cover"
     echo " 2. Dualboot using Volume buttons"
-    echo " 3. Exit script\n"
-    echo -n " Enter your choice (1, 2 or 3): "
+
+    if [ "$SB_TAG" = "_NOSB" ]; then
+        echo " 3. Multiboot with rEFInd bootmenu loader"
+        echo " 4. Exit script\n"
+    else
+        echo " 3. Exit script\n"
+    fi
+    echo -n " Enter your choice: "
     read choice
     case "$choice" in
         1)
-            echo "\nYou selected DualBoot usign Magnetic case/cover.\n\n"
+            echo "\nYou selected DualBoot using Magnetic case/cover.\n\n"
             DBKP_METHOD=0
-            echo "[INFO] When magnetic case is Closed, Windwos will start!"
+            echo "[INFO] When magnetic case is Closed, Windows will start!"
             echo "[INFO] When magnetic case is Open, Android will start!\n"
             break
             ;;
@@ -240,8 +252,23 @@ while true; do
             break
             ;;
         3)
-            echo "Exiting."
-            exit 0
+            if [ "$SB_TAG" = "_NOSB" ]; then
+                echo "\nYou selected Multiboot with rEFInd bootmenu loader.\n\n"
+                DBKP_METHOD=2
+                echo "[INFO] rEFInd Boot Menu will appear on startup (required extraction of EFI in esp).\n"
+                break
+            else
+                echo "Exiting."
+                exit 0
+            fi
+            ;;
+        4)
+            if [ "$SB_TAG" = "_NOSB" ]; then
+                echo "Exiting."
+                exit 0
+            else
+                echo "\nInvalid choice. Please try again.\n"
+            fi
             ;;
         *)
             echo "\nInvalid choice. Please try again.\n"
