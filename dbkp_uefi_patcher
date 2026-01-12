@@ -16,24 +16,6 @@ URL_SHELLCODE2="$BASE_URL/bin/aloha/ShellCode.Nabu2.bin"
 
 BASE_URL_MAGNETIC="$BASE_URL/bin/aloha/fd-files/magnetic"
 BASE_URL_VOLBUTTON="$BASE_URL/bin/aloha/fd-files/vol-button"
-UEFI_ALOHA_SB="Aloha_EFI_SB.fd"
-UEFI_W11_WHITE_SB="Win11_White_EFI_SB.fd"
-UEFI_W11_GRADIENT_SB="Win11_Gradient_EFI_SB.fd"
-UEFI_NYANKO_SENSEI_SB="Nyanko_Sensei_EFI_SB.fd"
-UEFI_SIRTORIUS_M_SB="SirTorius_M_EFI_SB.fd"
-UEFI_JADEKUBPOM_SB="JadeKubPom_EFI_SB.fd"
-UEFI_CAMBODIA_PORL_SB="Cambodia_Porl_EFI_SB.fd"
-UEFI_XIAOMI_SB="Xiaomi_EFI_SB.fd"
-UEFI_MI_WHITE_SB="MI_White_EFI_SB.fd"
-UEFI_MI_ORANGE_SB="MI_Orange_EFI_SB.fd"
-UEFI_WINDROID_SB="WinDroid_EFI_SB.fd"
-UEFI_CHARA_SB="Chara_Dreemurr_EFI_SB.fd"
-UEFI_STORYSWAP_SB="Storyswap_Chara_EFI_SB.fd"
-UEFI_YUKARI_SB="Yakumo_Yukari_EFI_SB.fd"
-UEFI_RALSEI_SB="Ralsei_EFI_SB.fd"
-UEFI_ROG_SB="ROG_EFI_SB.fd"
-UEFI_IDK_SB="idk_EFI_SB.fd"
-UEFI_NEKO_SB="Neko_EFI_SB.fd"
 
 TARGET_DIR="/dev/tmp/uefi-install"
 TARGET_BUSYBOX="$TARGET_DIR/busybox"
@@ -99,11 +81,11 @@ verify_checksum() {
 # Function to attempt download with checksum validation
 download_uefi() {
     if [ "$DBKP_METHOD" -eq 0 ]; then
-        log "[INFO] Proceeding with Magnetic case Dualboot method!" 
+        log "[INFO] Proceeding with Magnetic case Dualboot method!"
         PRIMARY_URL="$BASE_URL_MAGNETIC/$1"
         FILE_KEY="MAG_$1"
     else
-        log "[INFO] Proceeding with Volume Button Dualboot method!" 
+        log "[INFO] Proceeding with Volume Button Dualboot method!"
         rm -f "$TARGET_SHELLCODE"
         mv "$TARGET_SHELLCODE2" "$TARGET_SHELLCODE"
         PRIMARY_URL="$BASE_URL_VOLBUTTON/$1"
@@ -190,7 +172,50 @@ elif ! grep -q "=" "$CHECKSUM_FILE"; then
     exit 1
 fi
 
-echo "\n\n [WARNING] If you are currently using (or have previously used) a DBKP boot image, please flash the stock boot.img before proceeding.\n"
+echo "\n\n[WARNING] If you are currently using (or have previously used) a DBKP boot image, please flash the stock boot.img before proceeding.\n"
+
+while true; do
+    echo "\nSelect Secure Boot Mode:\n"
+    echo " 1. Secure Boot (Default, Recommended)"
+    echo " 2. No Secure Boot (Only if you know what you are doing)"
+    echo -n " Enter your choice (1 or 2): "
+    read sb_choice
+    case "$sb_choice" in
+        1|"")
+            echo "\n[INFO] Secure Boot Enabled (_SB)."
+            SB_TAG="_SB"
+            break
+            ;;
+        2)
+            echo "\n[INFO] Secure Boot Disabled (_NOSB)."
+            echo "[WARNING] Ensure you have enabled Test mode in windows!"
+            SB_TAG="_NOSB"
+            break
+            ;;
+        *)
+            echo "\nInvalid choice. Please enter 1 or 2."
+            ;;
+    esac
+done
+
+UEFI_ALOHA="Aloha_EFI${SB_TAG}.fd"
+UEFI_W11_WHITE="Win11_White_EFI${SB_TAG}.fd"
+UEFI_W11_GRADIENT="Win11_Gradient_EFI${SB_TAG}.fd"
+UEFI_NYANKO_SENSEI="Nyanko_Sensei_EFI${SB_TAG}.fd"
+UEFI_SIRTORIUS_M="SirTorius_M_EFI${SB_TAG}.fd"
+UEFI_JADEKUBPOM="JadeKubPom_EFI${SB_TAG}.fd"
+UEFI_CAMBODIA_PORL="Cambodia_Porl_EFI${SB_TAG}.fd"
+UEFI_XIAOMI="Xiaomi_EFI${SB_TAG}.fd"
+UEFI_MI_WHITE="MI_White_EFI${SB_TAG}.fd"
+UEFI_MI_ORANGE="MI_Orange_EFI${SB_TAG}.fd"
+UEFI_WINDROID="WinDroid_EFI${SB_TAG}.fd"
+UEFI_CHARA="Chara_Dreemurr_EFI${SB_TAG}.fd"
+UEFI_STORYSWAP="Storyswap_Chara_EFI${SB_TAG}.fd"
+UEFI_YUKARI="Yakumo_Yukari_EFI${SB_TAG}.fd"
+UEFI_RALSEI="Ralsei_EFI${SB_TAG}.fd"
+UEFI_ROG="ROG_EFI${SB_TAG}.fd"
+UEFI_IDK="idk_EFI${SB_TAG}.fd"
+UEFI_NEKO="Neko_EFI${SB_TAG}.fd"
 
 while true; do
     echo "\nChoose Which method you want to use:\n"
@@ -251,92 +276,92 @@ while true; do
     case "$choice" in
         1)
             echo "\nYou selected Aloha Inverted V, A Logo."
-            download_uefi "$UEFI_ALOHA_SB"
+            download_uefi "$UEFI_ALOHA"
             break
             ;;
         2)
             echo "\nYou selected Windows 11 White Square Logo."
-            download_uefi "$UEFI_W11_WHITE_SB"
+            download_uefi "$UEFI_W11_WHITE"
             break
             ;;
         3)
             echo "\nYou selected Windows 11 Gradient Rounded Logo."
-            download_uefi "$UEFI_W11_GRADIENT_SB"
+            download_uefi "$UEFI_W11_GRADIENT"
             break
             ;;
         4)
             echo "\nYou selected Nyanko Sensei (Madara) Logo."
-            download_uefi "$UEFI_NYANKO_SENSEI_SB"
+            download_uefi "$UEFI_NYANKO_SENSEI"
             break
             ;;
         5)
             echo "\nYou selected SirTorius M Logo."
-            download_uefi "$UEFI_SIRTORIUS_M_SB"
+            download_uefi "$UEFI_SIRTORIUS_M"
             break
             ;;
         6)
             echo "\nYou selected JadeKubPom logo."
-            download_uefi "$UEFI_JADEKUBPOM_SB"
+            download_uefi "$UEFI_JADEKUBPOM"
             break
             ;;
         7)
             echo "\nYou selected Cambodia Porl Logo."
-            download_uefi "$UEFI_CAMBODIA_PORL_SB"
+            download_uefi "$UEFI_CAMBODIA_PORL"
             break
             ;;
         8)
             echo "\nYou selected Xiaomi Logo."
-            download_uefi "$UEFI_XIAOMI_SB"
+            download_uefi "$UEFI_XIAOMI"
             break
             ;;
         9)
             echo "\nYou selected MI Orange Logo."
-            download_uefi "$UEFI_MI_ORANGE_SB"
+            download_uefi "$UEFI_MI_ORANGE"
             break
             ;;
         10)
             echo "\nYou selected MI White Logo."
-            download_uefi "$UEFI_MI_WHITE_SB"
+            download_uefi "$UEFI_MI_WHITE"
             break
             ;;
         11)
             echo "\nYou selected WinDroid Logo."
-            download_uefi "$UEFI_WINDROID_SB"
+            download_uefi "$UEFI_WINDROID"
             break
             ;;
         12)
             echo "\nYou selected Chara Dreemurr Logo."
-            download_uefi "$UEFI_CHARA_SB"
+            download_uefi "$UEFI_CHARA"
             break
             ;;
         13)
             echo "\nYou selected Storyswap Chara Logo."
-            download_uefi "$UEFI_STORYSWAP_SB"
+            download_uefi "$UEFI_STORYSWAP"
             break
             ;;
         14)
             echo "\nYou selected Yakumo Yukari Logo."
-            download_uefi "$UEFI_YUKARI_SB"
+            download_uefi "$UEFI_YUKARI"
             break
             ;;
         15)
             echo "\nYou selected Ralsei Logo."
-            download_uefi "$UEFI_RALSEI_SB"
+            download_uefi "$UEFI_RALSEI"
             break
             ;;
         16)
             echo "\nYou selected ROG Logo."
-            download_uefi "$UEFI_ROG_SB"
+            download_uefi "$UEFI_ROG"
             break
             ;;
         17)
             echo "\nYou selected idk what Logo."
-            download_uefi "$UEFI_IDK_SB"
+            download_uefi "$UEFI_IDK"
             break
             ;;
         18)
             echo "\nYou selected Neko Logo."
-            download_uefi "$UEFI_NEKO_SB"
+            download_uefi "$UEFI_NEKO"
             break
             ;;
         19)
@@ -382,7 +407,7 @@ if [ "$SIG" = "10000014" ]; then
 
         log "[SUCCESS] Kernel cleaned and ready for new patch"
     else
-        log "[WARNING] Patched image detected but unknown"
+        log "[WARNING] Patched image detected but unknown sturcture"
         echo "\n\n [NOTE] please flash the stock boot.img before continuing (do NOT use DBKP patched boot).\n"
         exit 1
     fi
