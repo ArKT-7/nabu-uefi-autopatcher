@@ -64,11 +64,16 @@ powershell.exe -C "irm https://raw.githubusercontent.com/arkt-7/nabu-uefi-autopa
 ## Finished!
 
 ## These are the logos available as of now:
+> [!IMPORTANT]
+> The core of these UEFI images is based on the original **[Aloha project](https://github.com/Project-Aloha)**. The UEFI images listed below contain custom logos which I built specifically because users requested them, each one was created in response to a specific request from the community. I have full respect for the original work and creators!
+
 > [!NOTE]
-> - **If Need help, have questions, or want to add your own logo? reach out to me on Telegram:** 
+> - **Have questions or want to request a new logo? Please [Create an Issue](../../issues) in this repository.**
+> - **Want to try doing it yourself? You can follow my [Logo Change Guide](logo-change.md) to change the logo on any existing UEFI image.**
+> - Alternatively, you can reach out to me on **~Telegram~**:
 > - [![Telegram](https://img.shields.io/badge/Chat-Telegram-brightgreen.svg?logo=telegram&style=flat-square)](https://telegram.me/ArKT_7) [![Telegram](https://img.shields.io/badge/Chat-Telegram-brightgreen.svg?logo=telegram&style=flat-square)](https://t.me/ArKT_7)
 
-| **1. Aloha Inverted V (Official)** | **2. Windows 11 White Square** | **3. Windows 11 Gradient Rounded** |
+| **1. Aloha Official (Andromeda)** | **2. Windows 11 White Square** | **3. Windows 11 Gradient Rounded** |
 |------------------------------------|--------------------------------|--------------------------------|
 | <p align="center"><a href="https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/aloha-uefi-nabu.zip"><img src="/bin/aloha/uefi-img-files/Custom-logos/Aloha-official/BootLogo.bmp" width="280"></a></p> | <p align="center"><a href="https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/Win11_White-uefi-nabu.zip"><img src="/bin/aloha/uefi-img-files/Custom-logos/W11-White/BootLogo.bmp" width="280"></a></p> | <p align="center"><a href="https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/Win11_Gradient-uefi-nabu.zip"><img src="/bin/aloha/uefi-img-files/Custom-logos/W11-Gradient/BootLogo.bmp" width="280"></a></p> |
 | [**`Download Aloha V uefi.img`**](https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/aloha_UEFI_SB.img) |[**`Download Win 11 white uefi.img`**](https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/Win11_White_UEFI_SB.img) | [**`Download Win 11 Gradient uefi.img`**](https://raw.githubusercontent.com/ArKT-7/nabu-uefi-autopatcher/refs/heads/main/bin/aloha/uefi-img-files/Win11_Gradient_UEFI_SB.img) |
