@@ -64,6 +64,8 @@ Now that you have the `extracted.fd` file, let's change the picture.
 13. **Save the file:**
     * Click **File** > **Save image file...**
     * Save it as `new.fd`.
+> [!NOTE]
+> If you get an error while saving, the file may still be too large for the available free space. Try reducing the file size further **(e.g., under 600KB)** and save again.
 
 > **💡 Tip:** If you want to see the *current* logo first, choose **Extract body...** instead of Replace, save it as `original.bmp`, and open it on your PC.
 
