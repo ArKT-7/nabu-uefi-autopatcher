@@ -7,6 +7,9 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css"/>
+        <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
         <style>
             :root {
                 --bg-color: #050505;
@@ -20,7 +23,7 @@
                 --font-stack: 'JetBrains Mono', monospace;
                 --radius: 16px;
                 --system-accent-color: #2ecc71;
-                --cursor-ball-color: #f39c12;
+                --cursor-color: #ffffff;
                 --dim-color: rgba(46, 204, 113, 0.05);
             }
 
@@ -32,7 +35,7 @@
                 --border-color: #e4e4e7;
                 --system-accent-color: #10b981;
                 --dim-color: rgba(16, 185, 129, 0.1);
-                --cursor-ball-color: #8b5cf6;
+                --cursor-color: #000000;
             }
 
             [data-theme="sunset"] {
@@ -43,7 +46,6 @@
                 --border-color: #500724;
                 --system-accent-color: #f59e0b;
                 --dim-color: rgba(245, 158, 11, 0.1);
-                --cursor-ball-color: #06b6d4;
             }
 
             [data-theme="ocean"] {
@@ -54,7 +56,6 @@
                 --border-color: #334155;
                 --system-accent-color: #38bdf8;
                 --dim-color: rgba(56, 189, 248, 0.1);
-                --cursor-ball-color: #facc15;
             }
 
             [data-theme="forest"] {
@@ -65,7 +66,6 @@
                 --border-color: #14532d;
                 --system-accent-color: #4ade80;
                 --dim-color: rgba(74, 222, 128, 0.1);
-                --cursor-ball-color: #ff00ff;
             }
 
             [data-theme="berry"] {
@@ -76,7 +76,6 @@
                 --border-color: #831843;
                 --system-accent-color: #fb7185;
                 --dim-color: rgba(251, 113, 133, 0.1);
-                --cursor-ball-color: #a3e635;
             }
 
             [data-theme="royal"] {
@@ -87,7 +86,6 @@
                 --border-color: #581c87;
                 --system-accent-color: #fbbf24;
                 --dim-color: rgba(251, 191, 36, 0.1);
-                --cursor-ball-color: #d8b4fe;
             }
 
             [data-theme="coffee"] {
@@ -98,7 +96,6 @@
                 --border-color: #5d4037;
                 --system-accent-color: #d4a373;
                 --dim-color: rgba(212, 163, 115, 0.1);
-                --cursor-ball-color: #2dd4bf;
             }
 
             [data-theme="midnight"] {
@@ -109,7 +106,6 @@
                 --border-color: #1e293b;
                 --system-accent-color: #6366f1;
                 --dim-color: rgba(99, 102, 241, 0.1);
-                --cursor-ball-color: #39ff14;
             }
 
             * {
@@ -130,39 +126,69 @@
                 transition: background-color 0.4s ease, color 0.4s ease;
             }
 
-            #custom-cursor {
-                display: none;
+            .target-cursor-wrapper {
                 position: fixed;
                 top: 0;
                 left: 0;
-                width: 21px;
-                height: 21px;
-                border: 2.39px solid var(--cursor-ball-color);
-                box-shadow: 0 0 5px var(--cursor-ball-color);
-                background-color: rgba(0, 0, 0, 0);
-                /* backdrop-filter: blur(1px); */
-                border-radius: 50%;
+                width: 0;
+                height: 0;
                 pointer-events: none;
                 z-index: 999999;
-                transform-origin: center center;
-                transition: border-color 0.2s, box-shadow 0.2s;
-                mix-blend-mode: normal;
+                transform: translate(-50%, -50%);
+                display: none;
+            }
+
+            .target-cursor-dot {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                width: 4px;
+                height: 4px;
+                background: var(--cursor-color);
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
                 will-change: transform;
+                transition: background-color 0.2s;
+            }
+
+            .target-cursor-corner {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 12px;
+                height: 12px;
+                border: 2.5px solid var(--cursor-color);
+                will-change: transform, width, height;
+                transition: border-color 0.2s;
+            }
+
+            .corner-tl {
+                border-right: none;
+                border-bottom: none;
+            }
+
+            .corner-tr {
+                border-left: none;
+                border-bottom: none;
+            }
+
+            .corner-br {
+                border-left: none;
+                border-top: none;
+            }
+
+            .corner-bl {
+                border-right: none;
+                border-top: none;
             }
 
             @media (pointer: fine) {
-                body.custom-cursor-active,
-                body.custom-cursor-active * {
+                body.custom-cursor-active, body.custom-cursor-active * {
                     cursor: none !important;
                 }
 
-                body.custom-cursor-active #custom-cursor {
+                body.custom-cursor-active .target-cursor-wrapper {
                     display: block;
-                }
-
-                body.custom-cursor-active.hovering #custom-cursor {
-                    box-shadow: 0 0 10px var(--cursor-ball-color);
-                    background-color: var(--dim-color);
                 }
             }
 
@@ -199,6 +225,21 @@
                 text-align: center;
                 box-shadow: 0 20px 50px rgba(0,0,0,0.4);
                 position: relative;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .modal-card::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .modal-card::-webkit-scrollbar-track {
+                background: transparent;
+                margin-block: 30px; }
+
+            .modal-card::-webkit-scrollbar-thumb {
+                background-color: var(--border-color);
+                border-radius: 10px;
             }
 
             .palette-grid {
@@ -231,6 +272,207 @@
             .p-col {
                 flex: 1;
                 height: 100%;
+            }
+
+            .pebble-btn {
+                font-size: 0.7rem;
+                font-weight: bold;
+                padding: 6px 14px;
+                border-radius: 8px;
+                border: 2px solid var(--system-accent-color);
+                color: var(--system-accent-color);
+                background: transparent;
+                cursor: pointer;
+                transition: all 0.2s;
+                text-transform: uppercase;
+                font-family: var(--font-stack);
+            }
+
+            .pebble-btn:hover {
+                background: var(--dim-color);
+                transform: scale(1.05);
+                box-shadow: 0 0 10px var(--dim-color);
+            }
+
+            .pickr {
+                width: 100%;
+            }
+
+            .pcr-button {
+                width: 100% !important;
+                height: 40px !important;
+                border-radius: 12px !important;
+                border: 1px solid var(--border-color) !important;
+                transition: all 0.2s;
+                position: relative !important;
+                z-index: 2 !important;
+                overflow: hidden !important;
+            }
+
+            .pcr-button::before {
+                border-radius: inherit !important;
+            }
+
+            .pcr-button::after {
+                content: 'CLICK HERE TO CHANGE' !important;
+                background: var(--system-accent-color) !important;
+                border-radius: inherit !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                color: #ffffff !important;
+                font-family: var(--font-stack) !important;
+                font-size: 0.75rem !important;
+                font-weight: 900 !important;
+                letter-spacing: 1px !important;
+                text-shadow: 0px 2px 5px rgba(0,0,0,0.8), 0px 0px 8px rgba(0,0,0,0.6), 0px 0px 2px rgba(0,0,0,1) !important;
+            }
+
+            .pcr-button.picker-open {
+                display: none !important;
+            }
+
+            .pcr-app {
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
+                background: var(--card-bg) !important;
+                border: 1px solid var(--border-color) !important;
+                border-radius: 12px !important;
+                box-shadow: none !important;
+                width: 100% !important;
+                transition: all 0.2s ease-in-out !important;
+                max-height: 0 !important;
+                padding: 0 15px !important;
+                margin-top: 0 !important;
+                border-width: 0 !important;
+                transform: translateY(-5px) !important;
+                overflow: hidden !important;
+            }
+
+            .pcr-app.app-open {
+                opacity: 1 !important;
+                visibility: visible !important;
+                pointer-events: auto !important;
+                display: flex !important;
+                flex-direction: column;
+                background: rgba(125,125,125,0.02) !important;
+                transform: translateY(0) !important;
+                max-height: 500px !important;
+                padding: 15px !important;
+                border-width: 1px !important;
+                border-radius: 12px !important;
+                overflow: visible !important;
+            }
+
+            .pcr-app[data-theme="nano"] .pcr-selection {
+                display: grid !important;
+                grid-gap: 15px !important;
+                grid-template-columns: 35px auto !important;
+                grid-template-rows: 150px auto !important;
+                width: 100% !important;
+                margin-top: 10px !important;
+            }
+
+            .pcr-app[data-theme="nano"] .pcr-color-palette {
+                grid-area: 1 / 1 / 2 / 3 !important;
+                width: 100% !important;
+                height: 100% !important;
+                border-radius: 8px !important;
+            }
+
+            .pcr-app[data-theme="nano"] .pcr-color-preview {
+                grid-area: 2 / 1 / 3 / 2 !important;
+                width: 35px !important;
+                height: 35px !important;
+                border-radius: 50% !important;
+                margin: 0 !important;
+                align-self: center !important;
+            }
+
+            .pcr-app[data-theme="nano"] .pcr-color-chooser {
+                grid-area: 2 / 2 / 3 / 3 !important;
+                height: 14px !important;
+                border-radius: 8px !important;
+                margin: 0 !important;
+                align-self: center !important;
+            }
+
+            .pcr-app .pcr-swatches {
+                margin-top: 50px !important;
+                display: flex !important;
+                flex-wrap: wrap !important;
+                justify-content: space-between !important;
+                width: 100% !important;
+            }
+
+            .pcr-app .pcr-swatches > button {
+                width: 25px !important;
+                height: 25px !important;
+                border-radius: 6px !important;
+                margin: 0 !important;
+            }
+
+            .pcr-app .pcr-interaction {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                gap: 8px !important;
+                margin-top: 15px !important;
+                width: 100% !important;
+            }
+
+            .pcr-app .pcr-interaction input.pcr-result {
+                flex: 0 0 100% !important;
+                background: var(--bg-color) !important;
+                color: var(--text-color) !important;
+                border: 1px solid var(--border-color) !important;
+                border-radius: 8px !important;
+                font-family: var(--font-stack) !important;
+                text-align: center;
+                padding: 10px !important;
+                margin: 0 0 5px 0 !important;
+            }
+
+            .pcr-app .pcr-interaction .pcr-type {
+                flex: 1 !important;
+                background: transparent !important;
+                color: var(--text-dim) !important;
+                border: 1px solid var(--border-color) !important;
+                border-radius: 8px !important;
+                font-family: var(--font-stack) !important;
+                font-size: 0.7rem !important;
+                padding: 8px 10px !important;
+                margin: 0 !important;
+                cursor: pointer;
+            }
+
+            .pcr-app .pcr-interaction .pcr-type.active {
+                color: var(--text-color) !important;
+                border-color: var(--system-accent-color) !important;
+            }
+
+            .pcr-app .pcr-interaction .pcr-save {
+                flex: 2 !important;
+                background: var(--system-accent-color) !important;
+                color: #000 !important;
+                border: none !important;
+                border-radius: 8px !important;
+                font-family: var(--font-stack) !important;
+                font-size: 0.8rem !important;
+                font-weight: bold !important;
+                padding: 8px 16px !important;
+                margin: 0 !important;
+                cursor: pointer;
+                transition: transform 0.2s;
+            }
+
+            .pcr-app .pcr-interaction .pcr-save:hover {
+                transform: scale(1.03);
             }
 
             .container {
@@ -398,8 +640,8 @@
             }
 
             .upload-area.active {
-                border-color: var(--accent-green);
-                background: rgba(46, 204, 113, 0.1);
+                border-color: var(--system-accent-color);
+                background: var(--dim-color);
             }
 
             .upload-icon {
@@ -440,14 +682,14 @@
             }
 
             .sys-btn.action {
-                background: rgba(46, 204, 113, 0.1);
-                border-color: var(--accent-green);
-                color: var(--accent-green);
+                background: var(--dim-color);
+                border-color: var(--system-accent-color);
+                color: var(--system-accent-color);
                 width: 100%;
             }
 
             .sys-btn.action:hover {
-                background: var(--accent-green);
+                background: var(--system-accent-color);
                 color: #000;
             }
 
@@ -611,12 +853,25 @@
         </style>
     </head>
     <body>
-        <div id="custom-cursor"></div>
+        <div class="target-cursor-wrapper">
+            <div class="target-cursor-dot"></div>
+            <div class="target-cursor-corner corner-tl"></div>
+            <div class="target-cursor-corner corner-tr"></div>
+            <div class="target-cursor-corner corner-br"></div>
+            <div class="target-cursor-corner corner-bl"></div>
+        </div>
         <div id="theme-overlay" class="overlay">
             <div class="modal-card">
                 <h2 class="brand">VISUAL STYLE</h2>
                 <div style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 20px;">SELECT INTERFACE THEME</div>
                 <div class="palette-grid" id="themeGrid"></div>
+                <div id="customColorSection" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <div style="font-size: 0.8rem; color: var(--text-dim); font-weight: bold; text-transform: uppercase;">CUSTOMIZE BASE ACCENT</div>
+                        <button id="resetColorBtn" class="pebble-btn" style="padding: 4px 8px; font-size: 0.6rem; margin: 0;" onclick="resetCustomColor()">RESET</button>
+                    </div>
+                    <div id="customAccentColorPicker"></div>
+                </div>
                 <div class="toggle-row">
                     <input type="checkbox" id="cursorToggle" onchange="toggleCursorPhysics(this.checked)">
                     <label for="cursorToggle">ENABLE CUSTOM PHY. CURSOR</label>
@@ -691,7 +946,7 @@
                     <div style="margin-bottom: 20px; font-size: 0.9rem; color: var(--text-dim);">
                         Drop your modified <b>.FD</b>
                         file here. Tool will combine it with the original Shim, re-compress it (Gzip), attach the original DTB, and build a new bootable image.
-                
+                    
                     </div>
                     <div class="upload-area" id="dropZoneRepack" onclick="document.getElementById('fileInputRepack').click()">
                         <div class="upload-icon" style="color: var(--accent-green);">♻️</div>
@@ -714,6 +969,44 @@
             </footer>
         </div>
         <script>
+            let accentPickr = null;
+
+            function hexToRgb(hex) {
+                var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : null;
+            }
+
+            function applyCustomColor(hexColor) {
+                const rgb = hexToRgb(hexColor);
+                if (rgb) {
+                    document.documentElement.style.setProperty('--system-accent-color', hexColor);
+                    document.documentElement.style.setProperty('--dim-color', `rgba(${rgb}, 0.1)`);
+                    document.documentElement.style.setProperty('--accent-green', hexColor);
+
+                    const currentTheme = localStorage.getItem('peek_theme') || 'dark';
+                    const activePalette = document.querySelector(`.palette-option[data-theme="${currentTheme}"]`);
+                    if (activePalette) {
+                        const cols = activePalette.querySelectorAll('.p-col');
+                        if (cols.length > 1) {
+                            cols[1].style.background = hexColor;
+                        }
+                    }
+                }
+            }
+
+            function resetCustomColor() {
+                const currentTheme = localStorage.getItem('peek_theme') || 'dark';
+                if (currentTheme !== 'dark' && currentTheme !== 'light')
+                    return;
+
+                localStorage.removeItem(`peek_custom_color_${currentTheme}`);
+                const defaultColor = currentTheme === 'dark' ? '#2ecc71' : '#10b981';
+
+                if (accentPickr)
+                    accentPickr.setColor(defaultColor);
+                applyCustomColor(defaultColor);
+            }
+
             const LZ4 = {
                 decompress: function(src) {
                     const magic = src[0] | (src[1] << 8) | (src[2] << 16) | (src[3] << 24);
@@ -783,6 +1076,7 @@
             };
 
             const STATE = {
+                originalFileName: null,
                 shim: null,
                 ramdisk: null,
                 appendedDtb: null,
@@ -844,6 +1138,7 @@
                 document.getElementById('extractCard').classList.add('hidden');
                 document.getElementById('repackSection').classList.remove('enabled');
                 document.getElementById('consoleLog').innerHTML = '';
+                STATE.originalFileName = file.name;
 
                 log(`Loading: ${file.name}`, 'info');
                 setSystemMsg("Analyzing Header...");
@@ -1033,13 +1328,16 @@
                     });
                     log(`Boot Image Forged: ${formatSize(finalBlob.size)}`, 'success');
                     setSystemMsg("Forge Successful. Ready to Download.");
+                    const baseName = STATE.originalFileName || "uefi.img";
+                    const newFileName = `New-${baseName}`;
 
                     const url = URL.createObjectURL(finalBlob);
                     const btn = document.getElementById('btnDlNewImg');
+                    btn.textContent = `DOWNLOAD ${newFileName.toUpperCase()}`;
                     btn.onclick = () => {
                         const a = document.createElement('a');
                         a.href = url;
-                        a.download = "new-uefi.img";
+                        a.download = newFileName;
                         a.click();
                     }
                     ;
@@ -1093,11 +1391,48 @@
                 document.documentElement.setAttribute('data-theme', themeId);
                 localStorage.setItem('peek_theme', themeId);
                 const options = document.querySelectorAll('.palette-option');
-                options.forEach(el => el.classList.toggle('active', el.dataset.theme === themeId));
+                if (options.length > 0) {
+                    options.forEach(el => el.classList.toggle('active', el.dataset.theme === themeId));
+                }
                 const btn = document.getElementById('theme-toggle');
-                const current = THEMES.find(t => t.id === themeId);
-                if (btn && current)
-                    btn.textContent = `[THEME: ${current.name.toUpperCase()}]`;
+                const currentTheme = THEMES.find(t => t.id === themeId);
+                if (btn && currentTheme)
+                    btn.textContent = `[THEME: ${currentTheme.name.toUpperCase()}]`;
+
+                const customSection = document.getElementById('customColorSection');
+                document.documentElement.style.removeProperty('--system-accent-color');
+                document.documentElement.style.removeProperty('--accent-green');
+                document.documentElement.style.removeProperty('--dim-color');
+
+                THEMES.forEach(t => {
+                    const opt = document.querySelector(`.palette-option[data-theme="${t.id}"]`);
+                    if (opt) {
+                        const cols = opt.querySelectorAll('.p-col');
+                        let tileColor = t.colors[1];
+                        if (t.id === 'dark' || t.id === 'light') {
+                            const saved = localStorage.getItem(`peek_custom_color_${t.id}`);
+                            if (saved)
+                                tileColor = saved;
+                        }
+                        if (cols.length > 1)
+                            cols[1].style.background = tileColor;
+                    }
+                }
+                );
+
+                if (themeId === 'dark' || themeId === 'light') {
+                    if (customSection)
+                        customSection.style.display = 'block';
+                    const defaultColor = themeId === 'dark' ? '#2ecc71' : '#10b981';
+                    const savedColor = localStorage.getItem(`peek_custom_color_${themeId}`) || defaultColor;
+
+                    if (accentPickr)
+                        accentPickr.setColor(savedColor);
+                    applyCustomColor(savedColor);
+                } else {
+                    if (customSection)
+                        customSection.style.display = 'none';
+                }
             }
 
             function toggleCursorPhysics(isEnabled) {
@@ -1139,35 +1474,447 @@
                     el.classList.remove('active');
             }
 
-            const cursor = document.getElementById('custom-cursor');
-            let mouseX = 0
-              , mouseY = 0
-              , cursorX = 0
-              , cursorY = 0;
-            const speed = 0.5;
-            window.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            }
-            );
-            document.body.addEventListener('mouseover', (e) => {
-                if (e.target.closest('button, .card, input, .upload-area, .file-item, .palette-option')) {
-                    document.body.classList.add('hovering');
-                } else {
-                    document.body.classList.remove('hovering');
+            document.addEventListener('DOMContentLoaded', () => {
+                accentPickr = Pickr.create({
+                    el: '#customAccentColorPicker',
+                    container: '#customColorSection',
+                    theme: 'nano',
+                    default: '#2ecc71',
+                    position: 'bottom-middle',
+                    swatches: ['#2ecc71', '#10b981', '#f59e0b', '#38bdf8', '#4ade80', '#fb7185', '#fbbf24', '#d4a373', '#6366f1'],
+                    components: {
+                        preview: true,
+                        opacity: false,
+                        hue: true,
+                        interaction: {
+                            hex: true,
+                            rgba: true,
+                            input: true,
+                            save: true
+                        }
+                    },
+                    strings: {
+                        save: 'SAVE'
+                    }
+                });
+
+                let allowPickerClose = false;
+                const originalHide = accentPickr.hide.bind(accentPickr);
+
+                accentPickr.hide = function() {
+                    if (allowPickerClose) {
+                        originalHide();
+                    }
+                }
+                ;
+
+                accentPickr.on('save', (color, instance) => {
+                    document.querySelector('.pcr-button').classList.remove('picker-open');
+                    document.querySelector('.pcr-app').classList.remove('app-open');
+
+                    setTimeout( () => {
+                        allowPickerClose = true;
+                        instance.hide();
+                        allowPickerClose = false;
+                    }
+                    , 200);
+                }
+                );
+
+                accentPickr.on('change', (color) => {
+                    const currentTheme = localStorage.getItem('peek_theme') || 'dark';
+                    const newColor = color.toHEXA().toString();
+                    applyCustomColor(newColor);
+                    localStorage.setItem(`peek_custom_color_${currentTheme}`, newColor);
+                }
+                );
+
+                accentPickr.on('show', () => {
+                    document.querySelector('.pcr-button').classList.add('picker-open');
+                    document.querySelector('.pcr-app').classList.add('app-open');
+                }
+                );
+
+                accentPickr.on('hide', () => {
+                    document.querySelector('.pcr-button').classList.remove('picker-open');
+                    document.querySelector('.pcr-app').classList.remove('app-open');
+                }
+                );
+
+                const cursorWrapper = document.querySelector('.target-cursor-wrapper');
+                const dotRef = document.querySelector('.target-cursor-dot');
+                const cornersRef = document.querySelectorAll('.target-cursor-corner');
+
+                const isMobile = ('ontouchstart'in window) || (navigator.maxTouchPoints > 0) || (window.innerWidth <= 768);
+
+                if (!isMobile && cursorWrapper) {
+                    let spinDuration = 2;
+                    let hoverDuration = 0.2;
+                    let parallaxOn = true;
+                    let activeTarget = null;
+                    let activeStrength = 0;
+                    let targetCornerPositions = null;
+                    let activeCornerData = null;
+                    let spinTl;
+                    const constants = {
+                        cornerSize: 12
+                    };
+
+                    const targetSelector = 'button, .card, input, .upload-area, .file-item, .palette-option, a';
+
+                    const posSize = constants.cornerSize;
+                    gsap.set('.corner-tl', {
+                        x: -posSize * 1.5,
+                        y: -posSize * 1.5
+                    });
+                    gsap.set('.corner-tr', {
+                        x: posSize * 0.5,
+                        y: -posSize * 1.5
+                    });
+                    gsap.set('.corner-br', {
+                        x: posSize * 0.5,
+                        y: posSize * 0.5
+                    });
+                    gsap.set('.corner-bl', {
+                        x: -posSize * 1.5,
+                        y: posSize * 0.5
+                    });
+
+                    gsap.set(cursorWrapper, {
+                        xPercent: -50,
+                        yPercent: -50,
+                        x: window.innerWidth / 2,
+                        y: window.innerHeight / 2
+                    });
+
+                    function createSpinTimeline() {
+                        if (spinTl)
+                            spinTl.kill();
+                        spinTl = gsap.timeline({
+                            repeat: -1
+                        }).to(cursorWrapper, {
+                            rotation: '+=360',
+                            duration: spinDuration,
+                            ease: 'none'
+                        });
+                    }
+                    createSpinTimeline();
+
+                    window.addEventListener('mousemove', (e) => {
+                        if (!document.body.classList.contains('custom-cursor-active'))
+                            return;
+
+                        gsap.to(cursorWrapper, {
+                            x: e.clientX,
+                            y: e.clientY,
+                            duration: 0.1,
+                            ease: 'power3.out'
+                        });
+                    }
+                    );
+
+                    const tickerFn = () => {
+                        if (!document.body.classList.contains('custom-cursor-active'))
+                            return;
+
+                        if (activeTarget && activeCornerData && activeStrength > 0) {
+                            const rect = activeTarget.getBoundingClientRect();
+                            const {padding, sizes} = activeCornerData;
+
+                            const bLeft = rect.left - padding;
+                            const bTop = rect.top - padding;
+                            const bRight = rect.right + padding;
+                            const bBottom = rect.bottom + padding;
+
+                            targetCornerPositions = [{
+                                x: bLeft,
+                                y: bTop
+                            }, {
+                                x: bRight - sizes[1],
+                                y: bTop
+                            }, {
+                                x: bRight - sizes[2],
+                                y: bBottom - sizes[2]
+                            }, {
+                                x: bLeft,
+                                y: bBottom - sizes[3]
+                            }];
+                        }
+
+                        if (!targetCornerPositions || activeStrength === 0)
+                            return;
+
+                        const cursorX = gsap.getProperty(cursorWrapper, 'x');
+                        const cursorY = gsap.getProperty(cursorWrapper, 'y');
+
+                        cornersRef.forEach( (corner, i) => {
+                            const currentX = gsap.getProperty(corner, 'x');
+                            const currentY = gsap.getProperty(corner, 'y');
+
+                            const targetX = targetCornerPositions[i].x - cursorX;
+                            const targetY = targetCornerPositions[i].y - cursorY;
+
+                            const finalX = currentX + (targetX - currentX) * activeStrength;
+                            const finalY = currentY + (targetY - currentY) * activeStrength;
+
+                            const duration = activeStrength >= 0.99 ? (parallaxOn ? 0.2 : 0) : 0.05;
+
+                            gsap.to(corner, {
+                                x: finalX,
+                                y: finalY,
+                                duration: duration,
+                                ease: duration === 0 ? 'none' : 'power1.out',
+                                overwrite: 'auto'
+                            });
+                        }
+                        );
+                    }
+                    ;
+                    gsap.ticker.add(tickerFn);
+
+                    let currentLeaveHandler = null;
+                    let resumeTimeout = null;
+
+                    window.addEventListener('mouseover', (e) => {
+                        if (!document.body.classList.contains('custom-cursor-active'))
+                            return;
+
+                        const target = e.target.closest(targetSelector);
+                        if (!target || activeTarget === target)
+                            return;
+
+                        if (activeTarget && currentLeaveHandler) {
+                            activeTarget.removeEventListener('mouseleave', currentLeaveHandler);
+                        }
+                        if (resumeTimeout) {
+                            clearTimeout(resumeTimeout);
+                            resumeTimeout = null;
+                        }
+
+                        activeTarget = target;
+                        cornersRef.forEach(corner => gsap.killTweensOf(corner));
+                        gsap.killTweensOf(cursorWrapper, 'rotation');
+                        if (spinTl)
+                            spinTl.pause();
+                        gsap.set(cursorWrapper, {
+                            rotation: 0
+                        });
+
+                        const rect = target.getBoundingClientRect();
+                        const {cornerSize} = constants;
+                        const cursorX = gsap.getProperty(cursorWrapper, 'x');
+                        const cursorY = gsap.getProperty(cursorWrapper, 'y');
+
+                        const padding = Math.max(6, Math.min(12, Math.min(rect.width, rect.height) * 0.1));
+
+                        const boxWidth = rect.width + padding * 2;
+                        const boxHeight = rect.height + padding * 2;
+                        const maxRad = Math.min(boxWidth, boxHeight) / 2;
+
+                        const compStyle = window.getComputedStyle(target);
+                        const getRad = (val) => {
+                            let r = parseFloat(val) || 0;
+                            const maxElemRad = Math.min(rect.width, rect.height) / 2;
+                            if (r > maxElemRad)
+                                r = maxElemRad;
+                            return r > 0 ? Math.min(r + padding, maxRad) : 0;
+                        }
+                        ;
+
+                        const rTL = getRad(compStyle.borderTopLeftRadius);
+                        const rTR = getRad(compStyle.borderTopRightRadius);
+                        const rBR = getRad(compStyle.borderBottomRightRadius);
+                        const rBL = getRad(compStyle.borderBottomLeftRadius);
+
+                        const getCornerSize = (r) => Math.min(maxRad, Math.max(cornerSize, r));
+
+                        const sizes = [getCornerSize(rTL), getCornerSize(rTR), getCornerSize(rBR), getCornerSize(rBL)];
+                        const radii = [rTL, rTR, rBR, rBL];
+
+                        activeCornerData = {
+                            padding,
+                            sizes,
+                            radii
+                        };
+
+                        const bLeft = rect.left - padding;
+                        const bTop = rect.top - padding;
+                        const bRight = rect.right + padding;
+                        const bBottom = rect.bottom + padding;
+
+                        targetCornerPositions = [{
+                            x: bLeft,
+                            y: bTop
+                        }, {
+                            x: bRight - sizes[1],
+                            y: bTop
+                        }, {
+                            x: bRight - sizes[2],
+                            y: bBottom - sizes[2]
+                        }, {
+                            x: bLeft,
+                            y: bBottom - sizes[3]
+                        }];
+
+                        const strengthObj = {
+                            current: 0
+                        };
+                        gsap.to(strengthObj, {
+                            current: 1,
+                            duration: hoverDuration,
+                            ease: 'power2.out',
+                            onUpdate: () => {
+                                activeStrength = strengthObj.current;
+                            }
+                        });
+
+                        cornersRef.forEach( (corner, i) => {
+                            let radiusProp = {};
+                            if (i === 0)
+                                radiusProp = {
+                                    borderTopLeftRadius: radii[0]
+                                };
+                            if (i === 1)
+                                radiusProp = {
+                                    borderTopRightRadius: radii[1]
+                                };
+                            if (i === 2)
+                                radiusProp = {
+                                    borderBottomRightRadius: radii[2]
+                                };
+                            if (i === 3)
+                                radiusProp = {
+                                    borderBottomLeftRadius: radii[3]
+                                };
+
+                            gsap.to(corner, {
+                                x: targetCornerPositions[i].x - cursorX,
+                                y: targetCornerPositions[i].y - cursorY,
+                                width: sizes[i],
+                                height: sizes[i],
+                                ...radiusProp,
+                                duration: 0.2,
+                                ease: 'power2.out'
+                            });
+                        }
+                        );
+
+                        currentLeaveHandler = () => {
+                            activeTarget = null;
+                            targetCornerPositions = null;
+                            activeCornerData = null;
+                            activeStrength = 0;
+
+                            const posSize = constants.cornerSize;
+                            const positions = [{
+                                x: -posSize * 1.5,
+                                y: -posSize * 1.5
+                            }, {
+                                x: posSize * 0.5,
+                                y: -posSize * 1.5
+                            }, {
+                                x: posSize * 0.5,
+                                y: posSize * 0.5
+                            }, {
+                                x: -posSize * 1.5,
+                                y: posSize * 0.5
+                            }];
+
+                            cornersRef.forEach( (corner, index) => {
+                                gsap.killTweensOf(corner);
+                                gsap.to(corner, {
+                                    x: positions[index].x,
+                                    y: positions[index].y,
+                                    width: posSize,
+                                    height: posSize,
+                                    borderTopLeftRadius: 0,
+                                    borderTopRightRadius: 0,
+                                    borderBottomRightRadius: 0,
+                                    borderBottomLeftRadius: 0,
+                                    duration: 0.3,
+                                    ease: 'power3.out'
+                                });
+                            }
+                            );
+
+                            resumeTimeout = setTimeout( () => {
+                                if (!activeTarget) {
+                                    const currentRotation = gsap.getProperty(cursorWrapper, 'rotation') || 0;
+                                    const normalizedRotation = currentRotation % 360;
+                                    if (spinTl)
+                                        spinTl.kill();
+                                    spinTl = gsap.timeline({
+                                        repeat: -1
+                                    }).to(cursorWrapper, {
+                                        rotation: '+=360',
+                                        duration: spinDuration,
+                                        ease: 'none'
+                                    });
+                                    gsap.to(cursorWrapper, {
+                                        rotation: normalizedRotation + 360,
+                                        duration: spinDuration * (1 - normalizedRotation / 360),
+                                        ease: 'none',
+                                        onComplete: () => {
+                                            if (spinTl)
+                                                spinTl.restart();
+                                        }
+                                    });
+                                }
+                                resumeTimeout = null;
+                            }
+                            , 50);
+                            target.removeEventListener('mouseleave', currentLeaveHandler);
+                        }
+                        ;
+                        target.addEventListener('mouseleave', currentLeaveHandler);
+                    }
+                    );
+
+                    window.addEventListener('mousedown', () => {
+                        if (!document.body.classList.contains('custom-cursor-active'))
+                            return;
+                        gsap.to(dotRef, {
+                            scale: 0.7,
+                            duration: 0.3
+                        });
+                        gsap.to(cursorWrapper, {
+                            scale: 0.9,
+                            duration: 0.2
+                        });
+                    }
+                    );
+
+                    window.addEventListener('mouseup', () => {
+                        if (!document.body.classList.contains('custom-cursor-active'))
+                            return;
+                        gsap.to(dotRef, {
+                            scale: 1,
+                            duration: 0.3
+                        });
+                        gsap.to(cursorWrapper, {
+                            scale: 1,
+                            duration: 0.2
+                        });
+                    }
+                    );
+
+                    window.addEventListener('scroll', () => {
+                        if (!activeTarget || !document.body.classList.contains('custom-cursor-active'))
+                            return;
+                        const mouseX = gsap.getProperty(cursorWrapper, 'x');
+                        const mouseY = gsap.getProperty(cursorWrapper, 'y');
+                        const elementUnderMouse = document.elementFromPoint(mouseX, mouseY);
+                        const isStillOverTarget = elementUnderMouse && (elementUnderMouse === activeTarget || elementUnderMouse.closest(targetSelector) === activeTarget);
+                        if (!isStillOverTarget && currentLeaveHandler) {
+                            currentLeaveHandler();
+                        }
+                    }
+                    , {
+                        passive: true
+                    });
                 }
             }
             );
-            function animateCursor() {
-                cursorX += (mouseX - cursorX) * speed;
-                cursorY += (mouseY - cursorY) * speed;
-                const dist = Math.sqrt(Math.pow(mouseX - cursorX, 2) + Math.pow(mouseY - cursorY, 2));
-                const scale = Math.min(dist / 15, 0.5);
-                const angle = Math.atan2(mouseY - cursorY, mouseX - cursorX) * 180 / Math.PI;
-                cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0) translate(-50%, -50%) rotate(${angle}deg) scale(${1 + scale}, ${1 - scale * 0.5})`;
-                requestAnimationFrame(animateCursor);
-            }
-            animateCursor();
 
             const Me = ['UEFI - FD repacker By ArKT', 'Web Version v1.7', 'ArKT-7', 'ArKT_7'];
             const MeContainer = document.getElementById('me-display');
@@ -1187,7 +1934,8 @@
 
             window.addEventListener('DOMContentLoaded', () => {
                 generateThemeGrid();
-                applyTheme(localStorage.getItem('peek_theme') || 'dark');
+                const savedTheme = localStorage.getItem('peek_theme') || 'dark';
+                applyTheme(savedTheme);
                 const savedCursor = localStorage.getItem('cursor_physics');
                 const shouldEnable = savedCursor === 'enabled' || savedCursor === null;
                 toggleCursorPhysics(shouldEnable);
